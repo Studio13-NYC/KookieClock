@@ -75,6 +75,7 @@ pub struct Frame {
     hour: i32,
     minute: i32,
     second: i32,
+    character: i32,
     visitor: i32,
     door: i32,
     sprite: i32,
@@ -199,6 +200,7 @@ extern "C" fn kc_tick(clock: &mut Clock, frame: &mut Frame) {
         hour: now.hour() as i32,
         minute: now.minute() as i32,
         second: now.second() as i32,
+        character: -1,
         visitor: -1,
         door: 0,
         sprite: 0,
@@ -214,12 +216,18 @@ extern "C" fn kc_tick(clock: &mut Clock, frame: &mut Frame) {
     };
     if let Some(v) = &mut clock.visit {
         let elapsed = v.start.map_or(0., |start| start.elapsed().as_secs_f32());
-        if v.audio.stalled(elapsed) || elapsed >= v.audio.finish {
+        if v.audio.stalled(elapsed) {
+            eprintln!("KookieClock: visit interrupted by a timer stall at {elapsed:.2}s");
+            kc_stop(clock);
+            return;
+        }
+        if elapsed >= v.audio.finish {
             kc_stop(clock);
             return;
         }
         let pose = model::visit_pose(elapsed, v.audio.visual_duration, v.motion);
         frame.generation = v.generation;
+        frame.character = v.id as i32;
         frame.scheduled = i32::from(v.scheduled);
         frame.door = (pose.doors * 16.).round() as i32;
         frame.visitor = if pose.visible { v.id as i32 } else { -1 };

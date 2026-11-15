@@ -22,7 +22,7 @@ cp assets/woodland/{house,pendulum,doors-*,visitor-*}.png "$resources/woodland/"
 xcrun --sdk macosx clang -fobjc-arc -mmacosx-version-min="$MACOSX_DEPLOYMENT_TARGET" \
     -Wall -Wextra -Wno-unused-parameter -Wno-deprecated-declarations \
     macos/main.m macos/ClockView.m "$target_dir/release/liblittle_timber.a" \
-    -framework AppKit -framework AVFoundation -framework Carbon -framework CoreGraphics \
+    -framework AppKit -framework AVFoundation -framework Carbon -framework CoreGraphics -framework ImageIO \
     -framework CoreFoundation -framework Security -framework SystemConfiguration \
     -liconv -lresolv -o "$app/Contents/MacOS/KookieClock"
 

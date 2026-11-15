@@ -1,4 +1,5 @@
 #import "ClockView.h"
+#import <ImageIO/ImageIO.h>
 
 static NSColor *Paint(unsigned rgb, CGFloat alpha) {
     return [NSColor colorWithSRGBRed:((rgb >> 16) & 255) / 255.0
@@ -55,6 +56,7 @@ static void DrawHand(CGFloat angle, CGFloat length, CGFloat width) {
 @implementation ClockView {
     NSCache<NSString *, NSImage *> *_images;
     NSCache<NSNumber *, NSImage *> *_poses;
+    NSArray<NSImage *> *_visitArt;
 }
 
 - (instancetype)initWithFrame:(NSRect)frame {
@@ -82,9 +84,31 @@ static void DrawHand(CGFloat angle, CGFloat length, CGFloat width) {
     if (image) return image;
     NSURL *url = [NSBundle.mainBundle URLForResource:name withExtension:@"png"
                                        subdirectory:@"woodland"];
-    if (url) image = [[NSImage alloc] initWithContentsOfURL:url];
+    if (!url) return nil;
+    CGImageSourceRef source = CGImageSourceCreateWithURL((__bridge CFURLRef)url, NULL);
+    if (!source) return nil;
+    CGImageRef bitmap = CGImageSourceCreateImageAtIndex(source, 0, (__bridge CFDictionaryRef)@{
+        (__bridge NSString *)kCGImageSourceShouldCacheImmediately: @YES
+    });
+    CFRelease(source);
+    if (!bitmap) return nil;
+    image = [[NSImage alloc] initWithCGImage:bitmap
+        size:NSMakeSize(CGImageGetWidth(bitmap), CGImageGetHeight(bitmap))];
+    CGImageRelease(bitmap);
     if (image) [_images setObject:image forKey:name];
     return image;
+}
+
+- (void)prepareVisit:(int)character {
+    // Keep these images alive throughout the performance, even under memory pressure.
+    NSMutableArray *art = [NSMutableArray arrayWithCapacity:18];
+    for (int i = 0; i <= 16; ++i) {
+        NSImage *door = [self art:[NSString stringWithFormat:@"doors-%02d", i]];
+        if (door) [art addObject:door];
+    }
+    NSImage *atlas = [self art:[NSString stringWithFormat:@"visitor-atlas-%02d", character]];
+    if (atlas) [art addObject:atlas];
+    _visitArt = art;
 }
 
 - (NSImage *)sprite:(int)visitor pose:(int)pose {

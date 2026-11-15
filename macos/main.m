@@ -297,6 +297,7 @@ static NSStackView *WindowContent(NSArray<NSView *> *views) {
         [self finishAudio];
         _visit = _frame.generation;
         if (_visit) {
+            [_view prepareVisit:_frame.character];
             if (_frame.scheduled) {
                 _scheduledFront = YES;
                 [self applyPlacement];
@@ -564,7 +565,7 @@ static NSStackView *WindowContent(NSArray<NSView *> *views) {
     [_galleryWindow close];
     [self sendBehind:nil];
     if (![self captureSmoke:@"clock-macos.png"]) [self failSmoke:@"idle clock did not draw"];
-    [self update:@{@"quiet": @NO, @"count_hour": @NO}];
+    [self update:@{@"quiet": @NO, @"count_hour": @NO, @"hourly": @NO, @"half_hourly": @NO}];
     _smokeStart = NSProcessInfo.processInfo.systemUptime;
     kc_visit(_clock, 7, false, true);
 }
@@ -589,7 +590,10 @@ static NSStackView *WindowContent(NSArray<NSView *> *views) {
     }
     if (!_smokeSawOpenDoor || !_smokeSawVisitor || !_smokeSawReturn || !_smokeSawClosedDoor ||
         !_smokeDecodedAudio || _panel.level == NSFloatingWindowLevel) {
-        [self failSmoke:@"visit, sound decode, or window restoration did not complete"];
+        [self failSmoke:[NSString stringWithFormat:
+            @"visit incomplete (opened=%d visitor=%d returned=%d closed=%d audio=%d floating=%d)",
+            _smokeSawOpenDoor, _smokeSawVisitor, _smokeSawReturn, _smokeSawClosedDoor,
+            _smokeDecodedAudio, _panel.level == NSFloatingWindowLevel]];
     }
     NSLog(@"KookieClock smoke test passed: settings, cast, rendered visit, door timing, sound decode, desktop placement. Playback accepted: %@.",
           _smokePlayedAudio ? @"yes" : @"no audio device");

@@ -7,7 +7,7 @@
 typedef struct KCClock KCClock;
 typedef struct {
     uint64_t generation, revision;
-    int32_t hour, minute, second, visitor, door, sprite, scheduled;
+    int32_t hour, minute, second, character, visitor, door, sprite, scheduled;
     float swing, elapsed, depth, lateral;
 } KCFrame;
 
