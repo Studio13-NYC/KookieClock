@@ -14,6 +14,7 @@ struct Visit {
     motion: bool,
     generation: u64,
     start: Option<Instant>,
+    elapsed: f32,
     audio: VisitAudio,
 }
 
@@ -55,6 +56,7 @@ impl Clock {
             motion: settings.motion,
             generation: self.generation,
             start: None,
+            elapsed: 0.,
             audio: VisitAudio::new(id, settings, count, audible),
         });
     }
@@ -183,7 +185,7 @@ extern "C" fn kc_started(clock: &mut Clock) {
 }
 
 #[no_mangle]
-extern "C" fn kc_tick(clock: &mut Clock, frame: &mut Frame) {
+extern "C" fn kc_tick(clock: &mut Clock, frame: &mut Frame, playback_seconds: f64) {
     let now = Local::now();
     if let Some(slot) = clock
         .scheduler
@@ -215,12 +217,18 @@ extern "C" fn kc_tick(clock: &mut Clock, frame: &mut Frame) {
         lateral: 0.,
     };
     if let Some(v) = &mut clock.visit {
-        let elapsed = v.start.map_or(0., |start| start.elapsed().as_secs_f32());
-        if v.audio.stalled(elapsed) {
-            eprintln!("KookieClock: visit interrupted by a timer stall at {elapsed:.2}s");
-            kc_stop(clock);
-            return;
-        }
+        // AVAudioPlayer runs independently of AppKit's timer. If the UI thread
+        // misses a tick, draw the current pose instead of cutting off the audio.
+        // Sleep and wall-clock discontinuities still cancel the visit.
+        let elapsed = v.start.map_or(0., |start| {
+            if playback_seconds >= 0. {
+                playback_seconds as f32
+            } else {
+                start.elapsed().as_secs_f32()
+            }
+        });
+        let elapsed = elapsed.max(v.elapsed);
+        v.elapsed = elapsed;
         if elapsed >= v.audio.finish {
             kc_stop(clock);
             return;

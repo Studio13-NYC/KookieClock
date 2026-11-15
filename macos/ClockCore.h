@@ -17,7 +17,8 @@ void kc_destroy(KCClock *clock);
 enum { KCSettings, KCSaved, KCCast };
 const uint8_t *kc_json(KCClock *clock, int32_t kind, size_t *length);
 bool kc_settings(KCClock *clock, const uint8_t *bytes, size_t length);
-void kc_tick(KCClock *clock, KCFrame *frame);
+// Pass -1 when a soundtrack is not playing.
+void kc_tick(KCClock *clock, KCFrame *frame, double playback_seconds);
 void kc_visit(KCClock *clock, int32_t id, bool half, bool scheduled);
 void kc_stop(KCClock *clock);
 void kc_resume(KCClock *clock);

@@ -287,7 +287,7 @@ static NSStackView *WindowContent(NSArray<NSView *> *views) {
 - (void)tick:(NSTimer *)timer {
     if (_suspended) return;
     int lastSecond = _frame.second;
-    kc_tick(_clock, &_frame);
+    kc_tick(_clock, &_frame, _player.isPlaying ? _player.currentTime : -1);
     if (_frame.revision != _savedRevision) {
         _savedRevision = _frame.revision;
         [self saveClock];

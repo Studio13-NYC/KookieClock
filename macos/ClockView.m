@@ -56,7 +56,7 @@ static void DrawHand(CGFloat angle, CGFloat length, CGFloat width) {
 @implementation ClockView {
     NSCache<NSString *, NSImage *> *_images;
     NSCache<NSNumber *, NSImage *> *_poses;
-    NSArray<NSImage *> *_visitArt;
+    NSDictionary<NSString *, NSImage *> *_visitArt;
 }
 
 - (instancetype)initWithFrame:(NSRect)frame {
@@ -80,7 +80,7 @@ static void DrawHand(CGFloat angle, CGFloat length, CGFloat width) {
 }
 
 - (NSImage *)art:(NSString *)name {
-    NSImage *image = [_images objectForKey:name];
+    NSImage *image = _visitArt[name] ?: [_images objectForKey:name];
     if (image) return image;
     NSURL *url = [NSBundle.mainBundle URLForResource:name withExtension:@"png"
                                        subdirectory:@"woodland"];
@@ -101,13 +101,13 @@ static void DrawHand(CGFloat angle, CGFloat length, CGFloat width) {
 
 - (void)prepareVisit:(int)character {
     // Keep these images alive throughout the performance, even under memory pressure.
-    NSMutableArray *art = [NSMutableArray arrayWithCapacity:18];
+    NSMutableDictionary *art = [NSMutableDictionary dictionaryWithCapacity:18];
     for (int i = 0; i <= 16; ++i) {
-        NSImage *door = [self art:[NSString stringWithFormat:@"doors-%02d", i]];
-        if (door) [art addObject:door];
+        NSString *name = [NSString stringWithFormat:@"doors-%02d", i];
+        art[name] = [self art:name];
     }
-    NSImage *atlas = [self art:[NSString stringWithFormat:@"visitor-atlas-%02d", character]];
-    if (atlas) [art addObject:atlas];
+    NSString *name = [NSString stringWithFormat:@"visitor-atlas-%02d", character];
+    art[name] = [self art:name];
     _visitArt = art;
 }
 
