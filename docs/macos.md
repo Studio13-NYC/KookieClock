@@ -15,7 +15,7 @@ The script builds for the Mac it runs on and writes `dist/macos/KookieClock-maco
 
 ## Share a test build with a friend
 
-Download the `KookieClock-macos-universal` artifact at the bottom of a successful [Mac build](https://github.com/Studio13-NYC/KookieClock/actions/workflows/macos.yml). GitHub asks you to sign in. Extract the artifact and share the enclosed `KookieClock-macos-universal.zip`. Your friend can extract it and move `KookieClock.app` to Applications.
+Download `KookieClock-macos-universal.zip` from the [Mac test release](https://github.com/Studio13-NYC/KookieClock/releases/tag/macos-v0.1.0-test). Share the release link or the ZIP. Your friend can extract it and move `KookieClock.app` to Applications.
 
 The test build can be shared without Apple Developer membership. If macOS blocks the first launch and your friend trusts the copy you sent, macOS may offer **Open Anyway** under **System Settings → Privacy & Security** after they try to open the app. A managed Mac may restrict this choice. [Apple's instructions for opening downloaded apps](https://support.apple.com/en-us/102445)
 
@@ -34,6 +34,4 @@ The [Mac workflow](https://github.com/Studio13-NYC/KookieClock/actions/workflows
 
 Those checks use a diagnostic visit and call the shortcut handler directly after registration. A Mac user can verify actual launch after signing in, key presses while another app is active, and a live hour boundary. Spaces, fullscreen apps, sleep and wake, and physical audio output are outside the automated checks.
 
-## Distribution
-
-GitHub Actions provides ad hoc signed development builds. The separate release workflow signs the universal app with Developer ID, sends it to Apple for notarization, and produces a ZIP to attach to a GitHub release. See the [GitHub release instructions](macos-release.md).
+The GitHub prerelease uses the universal build from CI with an ad hoc signature. For a new test release, download `KookieClock-macos-universal` from the successful Actions run and attach the enclosed ZIP to a GitHub prerelease.

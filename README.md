@@ -103,11 +103,10 @@ Controls include volume, sound choices, quiet hours, snooze, separate hour/half-
 | Platform | Current status |
 | --- | --- |
 | Windows x64 | Working native Win32/GDI+ application and portable ZIP |
-| macOS Apple Silicon | Native AppKit preview with a GitHub Actions build |
-| macOS Intel | Native AppKit preview with a GitHub Actions build |
+| macOS Apple Silicon and Intel | Native AppKit test build for macOS 13+ |
 | Linux | Portable Rust core checked in CI; no desktop interface |
 
-The Mac preview builds on the shared Rust library. See the [Mac build and test guide](docs/macos.md) for preview bundles, controls, and release status.
+Download the [Mac test build](https://github.com/Studio13-NYC/KookieClock/releases/tag/macos-v0.1.0-test) and use the [Mac guide](docs/macos.md) for installation and controls.
 
 ## Build and test
 
@@ -137,7 +136,6 @@ All repository text uses **UTF-8**, without a byte-order mark. Editor defaults a
 
 - [Windows user and developer guide](docs/windows-guide.md): settings, commands, build instructions, and prior desktop verification.
 - [Mac build and test guide](docs/macos.md)
-- [Mac signing and GitHub release guide](docs/macos-release.md)
 - [Clock behavior and sound research](docs/cuckoo-behavior-and-sound-research.md).
 - [Audio provenance](assets/audio/provenance.json): generated samples and their source prompts.
 - `tools/render_woodland.py` and `assets/woodland/clock-source.blend`: original artwork source.
