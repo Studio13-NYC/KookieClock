@@ -1,11 +1,19 @@
 #import <AppKit/AppKit.h>
 #import <AVFoundation/AVFoundation.h>
 #import <Carbon/Carbon.h>
+#import <ServiceManagement/ServiceManagement.h>
 
 #import "ClockView.h"
 
 static NSString *const SavedClockKey = @"SavedClock";
 static const NSSize ClockSize = {400, 575};
+static const OSType HotkeySignature = 0x4B4F4F4B; // KOOK
+static const UInt32 LetterKeyCodes[] = {
+    kVK_ANSI_A, kVK_ANSI_B, kVK_ANSI_C, kVK_ANSI_D, kVK_ANSI_E, kVK_ANSI_F, kVK_ANSI_G,
+    kVK_ANSI_H, kVK_ANSI_I, kVK_ANSI_J, kVK_ANSI_K, kVK_ANSI_L, kVK_ANSI_M, kVK_ANSI_N,
+    kVK_ANSI_O, kVK_ANSI_P, kVK_ANSI_Q, kVK_ANSI_R, kVK_ANSI_S, kVK_ANSI_T, kVK_ANSI_U,
+    kVK_ANSI_V, kVK_ANSI_W, kVK_ANSI_X, kVK_ANSI_Y, kVK_ANSI_Z,
+};
 
 @interface ClockPanel : NSPanel
 @end
@@ -17,12 +25,16 @@ static const NSSize ClockSize = {400, 575};
 @interface ClockApp : NSObject <NSApplicationDelegate, NSMenuDelegate, NSTextFieldDelegate>
 @property(nonatomic) BOOL smokeTest;
 - (void)showClock:(id)sender;
+- (BOOL)handleHotkey:(EventHotKeyID)identifier;
 @end
 
 static OSStatus HotkeyPressed(EventHandlerCallRef next, EventRef event, void *context) {
-    if (GetEventKind(event) != kEventHotKeyPressed) return eventNotHandledErr;
-    [(__bridge ClockApp *)context showClock:nil];
-    return noErr;
+    EventHotKeyID identifier;
+    if (GetEventParameter(event, kEventParamDirectObject, typeEventHotKeyID, NULL,
+                          sizeof(identifier), NULL, &identifier) != noErr) {
+        return eventNotHandledErr;
+    }
+    return [(__bridge ClockApp *)context handleHotkey:identifier] ? noErr : eventNotHandledErr;
 }
 
 static NSMenuItem *MenuItem(NSMenu *menu, NSString *title, id target, SEL action, NSInteger tag) {
@@ -78,8 +90,16 @@ static NSStackView *WindowContent(NSArray<NSView *> *views) {
     NSPopUpButton *_friends;
     NSImageView *_portrait;
     NSTextField *_performance;
+    NSPopUpButton *_shortcutLetter;
+    NSButton *_shortcutShift;
+    NSTextField *_shortcutStatus;
+    NSButton *_loginItem;
+    NSTextField *_loginStatus;
     EventHotKeyRef _hotkey;
     EventHandlerRef _hotkeyHandler;
+    UInt32 _hotkeyIdentifier;
+    int _activeLetter;
+    BOOL _activeShift;
     uint64_t _visit;
     uint64_t _savedRevision;
     BOOL _manuallyFront;
@@ -208,7 +228,7 @@ static NSStackView *WindowContent(NSArray<NSView *> *views) {
     _status.button.image = [NSImage imageWithSystemSymbolName:@"clock" accessibilityDescription:@"KookieClock"];
     _status.button.toolTip = @"KookieClock";
     _status.menu = [self makeControlsMenu];
-    if (!self.smokeTest) [self registerHotkey];
+    [self installHotkey];
     NSNotificationCenter *center = NSWorkspace.sharedWorkspace.notificationCenter;
     [center addObserver:self selector:@selector(sleep:) name:NSWorkspaceWillSleepNotification object:nil];
     [center addObserver:self selector:@selector(wake:) name:NSWorkspaceDidWakeNotification object:nil];
@@ -223,18 +243,116 @@ static NSStackView *WindowContent(NSArray<NSView *> *views) {
     if (self.smokeTest) [self startSmokeTest];
 }
 
-- (void)registerHotkey {
+- (NSString *)shortcutLabel {
+    int letter = [_settings[@"hotkey_letter"] intValue];
+    BOOL shift = [_settings[@"hotkey_shift"] boolValue];
+    return [NSString stringWithFormat:@"Control–Option–%@%c", shift ? @"Shift–" : @"", letter];
+}
+
+- (void)installHotkey {
     EventTypeSpec event = {kEventClassKeyboard, kEventHotKeyPressed};
-    OSStatus install = InstallEventHandler(GetApplicationEventTarget(), HotkeyPressed, 1, &event,
-                                           (__bridge void *)self, &_hotkeyHandler);
-    EventHotKeyID identifier = {0x4B4F4F4B, 1}; // KOOK
-    OSStatus registration = install == noErr
-        ? RegisterEventHotKey(kVK_ANSI_C, controlKey | optionKey, identifier,
-                              GetApplicationEventTarget(), 0, &_hotkey)
-        : install;
-    _status.button.toolTip = registration == noErr
-        ? @"KookieClock · Control–Option–C to bring forward"
-        : @"KookieClock · shortcut unavailable. Use this menu to bring forward.";
+    InstallEventHandler(GetApplicationEventTarget(), HotkeyPressed, 1, &event,
+                        (__bridge void *)self, &_hotkeyHandler);
+    [self registerHotkeyLetter:[_settings[@"hotkey_letter"] intValue]
+                         shift:[_settings[@"hotkey_shift"] boolValue]];
+    [self refreshShortcutStatus];
+}
+
+- (BOOL)registerHotkeyLetter:(int)letter shift:(BOOL)shift {
+    if (!_hotkeyHandler || letter < 'A' || letter > 'Z') return NO;
+    if (_hotkey && letter == _activeLetter && shift == _activeShift) return YES;
+    EventHotKeyID identifier = {HotkeySignature, _hotkeyIdentifier + 1};
+    EventHotKeyRef candidate = NULL;
+    OSStatus result = RegisterEventHotKey(LetterKeyCodes[letter - 'A'],
+        controlKey | optionKey | (shift ? shiftKey : 0), identifier,
+        GetApplicationEventTarget(), kEventHotKeyExclusive, &candidate);
+    if (result != noErr) return NO;
+    if (_hotkey) UnregisterEventHotKey(_hotkey);
+    _hotkey = candidate;
+    _hotkeyIdentifier = identifier.id;
+    _activeLetter = letter;
+    _activeShift = shift;
+    return YES;
+}
+
+- (BOOL)handleHotkey:(EventHotKeyID)identifier {
+    if (identifier.signature != HotkeySignature || identifier.id != _hotkeyIdentifier || !_hotkey) {
+        return NO;
+    }
+    [self showClock:nil];
+    return YES;
+}
+
+- (void)refreshShortcutStatus {
+    NSString *shortcut = _hotkey ? [self shortcutLabel] : @"Shortcut unavailable. Choose another letter.";
+    _shortcutStatus.stringValue = shortcut;
+    _status.button.toolTip = [NSString stringWithFormat:@"KookieClock · %@", shortcut];
+}
+
+- (BOOL)applyShortcutSelection {
+    int letter = 'A' + (int)_shortcutLetter.indexOfSelectedItem;
+    BOOL shift = _shortcutShift.state == NSControlStateValueOn;
+    if (![self registerHotkeyLetter:letter shift:shift]) {
+        [_shortcutLetter selectItemAtIndex:[_settings[@"hotkey_letter"] intValue] - 'A'];
+        _shortcutShift.state = [_settings[@"hotkey_shift"] boolValue]
+            ? NSControlStateValueOn : NSControlStateValueOff;
+        _shortcutStatus.stringValue = _hotkey
+            ? [NSString stringWithFormat:@"Unavailable. Still using %@.", [self shortcutLabel]]
+            : @"Shortcut unavailable. Choose another letter.";
+        return NO;
+    }
+    [self update:@{@"hotkey_letter": @(letter), @"hotkey_shift": @(shift)}];
+    [self refreshShortcutStatus];
+    return YES;
+}
+
+- (void)changeShortcut:(id)sender {
+    [self applyShortcutSelection];
+}
+
+- (void)refreshLoginItem {
+    if (!_loginItem) return;
+    switch (SMAppService.mainApp.status) {
+        case SMAppServiceStatusEnabled:
+            _loginItem.state = NSControlStateValueOn;
+            _loginStatus.stringValue = @"Enabled";
+            break;
+        case SMAppServiceStatusRequiresApproval:
+            _loginItem.state = NSControlStateValueOn;
+            _loginStatus.stringValue = @"Approval needed in Login Items";
+            break;
+        case SMAppServiceStatusNotFound:
+            _loginItem.state = NSControlStateValueOff;
+            _loginStatus.stringValue = @"Unavailable from this location";
+            break;
+        default:
+            _loginItem.state = NSControlStateValueOff;
+            _loginStatus.stringValue = @"Off";
+            break;
+    }
+}
+
+- (void)changeLoginItem:(NSButton *)sender {
+    SMAppService *service = SMAppService.mainApp;
+    BOOL enabled = sender.state == NSControlStateValueOn;
+    NSError *error = nil;
+    BOOL changed = enabled ? [service registerAndReturnError:&error]
+                           : [service unregisterAndReturnError:&error];
+    [self refreshLoginItem];
+    if (!changed && !(enabled && service.status == SMAppServiceStatusRequiresApproval)) {
+        _loginStatus.stringValue = @"Could not change login item";
+        NSAlert *alert = error ? [NSAlert alertWithError:error] : [NSAlert new];
+        alert.messageText = @"KookieClock could not change launch at login.";
+        [alert beginSheetModalForWindow:_settingsWindow completionHandler:nil];
+    }
+}
+
+- (void)openLoginItems:(id)sender {
+    [SMAppService openSystemSettingsLoginItems];
+}
+
+- (void)applicationDidBecomeActive:(NSNotification *)notification {
+    [self refreshLoginItem];
 }
 
 - (void)applyPlacement {
@@ -463,7 +581,26 @@ static NSStackView *WindowContent(NSArray<NSView *> *views) {
     columns.alignment = NSLayoutAttributeTop;
     columns.spacing = 25;
     NSButton *reset = [NSButton buttonWithTitle:@"Reset Position" target:self action:@selector(resetPosition:)];
-    return WindowContent(@[form, columns, reset, Label(@"Control–Option–C brings the clock forward.")]);
+    _shortcutLetter = [[NSPopUpButton alloc] initWithFrame:NSZeroRect pullsDown:NO];
+    for (int letter = 'A'; letter <= 'Z'; ++letter) {
+        [_shortcutLetter addItemWithTitle:[NSString stringWithFormat:@"%c", letter]];
+    }
+    [_shortcutLetter selectItemAtIndex:[_settings[@"hotkey_letter"] intValue] - 'A'];
+    _shortcutLetter.accessibilityLabel = @"Bring clock forward shortcut letter";
+    _shortcutLetter.target = self;
+    _shortcutLetter.action = @selector(changeShortcut:);
+    _shortcutShift = [NSButton checkboxWithTitle:@"Add Shift" target:self action:@selector(changeShortcut:)];
+    _shortcutShift.state = [_settings[@"hotkey_shift"] boolValue] ? NSControlStateValueOn : NSControlStateValueOff;
+    _shortcutStatus = Label(@"");
+    [self refreshShortcutStatus];
+    NSStackView *shortcut = Stack(@[Label(@"Bring Forward"), Label(@"Control–Option"),
+        _shortcutLetter, _shortcutShift], NSUserInterfaceLayoutOrientationHorizontal);
+    _loginItem = [NSButton checkboxWithTitle:@"Launch at Login" target:self action:@selector(changeLoginItem:)];
+    _loginStatus = Label(@"");
+    [self refreshLoginItem];
+    NSButton *loginSettings = [NSButton buttonWithTitle:@"Login Items…" target:self action:@selector(openLoginItems:)];
+    NSStackView *login = Stack(@[_loginItem, loginSettings, _loginStatus], NSUserInterfaceLayoutOrientationHorizontal);
+    return WindowContent(@[form, columns, reset, shortcut, _shortcutStatus, login]);
 }
 
 - (void)refreshSettingsWindow {
@@ -475,6 +612,7 @@ static NSStackView *WindowContent(NSArray<NSView *> *views) {
         _settingsWindow = ControlsWindow(@"KookieClock Settings", [self settingsContent]);
     }
     [NSApp activateIgnoringOtherApps:YES];
+    [self refreshLoginItem];
     [_settingsWindow makeKeyAndOrderFront:nil];
 }
 
@@ -555,6 +693,36 @@ static NSStackView *WindowContent(NSArray<NSView *> *views) {
     }
     [self showSettings:nil];
     if (!_settingsWindow.isVisible) [self failSmoke:@"settings did not open"];
+    [_shortcutLetter selectItemAtIndex:'K' - 'A'];
+    _shortcutShift.state = NSControlStateValueOn;
+    if (![self applyShortcutSelection] || [_settings[@"hotkey_letter"] intValue] != 'K' ||
+        ![_settings[@"hotkey_shift"] boolValue]) {
+        [self failSmoke:@"customized shortcut did not register or save"];
+    }
+    [self sendBehind:nil];
+    EventHotKeyID custom = {HotkeySignature, _hotkeyIdentifier};
+    if (![self handleHotkey:custom] || _panel.level != NSFloatingWindowLevel) {
+        [self failSmoke:@"shortcut did not bring the clock forward"];
+    }
+    SMAppService *login = SMAppService.mainApp;
+    SMAppServiceStatus before = login.status;
+    if (before == SMAppServiceStatusNotRegistered || before == SMAppServiceStatusNotFound) {
+        NSError *error = nil;
+        BOOL registered = [login registerAndReturnError:&error];
+        SMAppServiceStatus after = login.status;
+        if (registered || after == SMAppServiceStatusEnabled || after == SMAppServiceStatusRequiresApproval) {
+            [self refreshLoginItem];
+            BOOL reflected = _loginItem.state == NSControlStateValueOn;
+            if (![login unregisterAndReturnError:&error]) [self failSmoke:@"could not remove test login item"];
+            [self refreshLoginItem];
+            if (!reflected || _loginItem.state != NSControlStateValueOff) {
+                [self failSmoke:@"login item status did not match Service Management"];
+            }
+            NSLog(@"KookieClock login-item registration and removal passed. Registered status: %ld.", (long)after);
+        } else {
+            NSLog(@"KookieClock login-item registration unavailable in this runner (status %ld): %@.", (long)after, error);
+        }
+    }
     [_settingsWindow close];
     [self showGallery:nil];
     [_friends selectItemAtIndex:7];
@@ -595,7 +763,7 @@ static NSStackView *WindowContent(NSArray<NSView *> *views) {
             _smokeSawOpenDoor, _smokeSawVisitor, _smokeSawReturn, _smokeSawClosedDoor,
             _smokeDecodedAudio, _panel.level == NSFloatingWindowLevel]];
     }
-    NSLog(@"KookieClock smoke test passed: settings, cast, rendered visit, door timing, sound decode, desktop placement. Playback accepted: %@.",
+    NSLog(@"KookieClock smoke test passed: settings, shortcut, cast, rendered visit, door timing, sound decode, desktop placement. Playback accepted: %@.",
           _smokePlayedAudio ? @"yes" : @"no audio device");
     [NSApp terminate:nil];
 }

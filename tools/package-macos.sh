@@ -23,7 +23,7 @@ xcrun --sdk macosx clang -fobjc-arc -mmacosx-version-min="$MACOSX_DEPLOYMENT_TAR
     -Wall -Wextra -Wno-unused-parameter -Wno-deprecated-declarations \
     macos/main.m macos/ClockView.m "$target_dir/release/liblittle_timber.a" \
     -framework AppKit -framework AVFoundation -framework Carbon -framework CoreGraphics -framework ImageIO \
-    -framework CoreFoundation -framework Security -framework SystemConfiguration \
+    -framework CoreFoundation -framework Security -framework ServiceManagement -framework SystemConfiguration \
     -liconv -lresolv -o "$app/Contents/MacOS/KookieClock"
 
 plutil -lint "$app/Contents/Info.plist"
