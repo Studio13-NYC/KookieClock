@@ -1,0 +1,11 @@
+# README artwork provenance
+
+`kookieclock-hero.png` was created on 2026-11-15 with the built-in imagegen tool in reference-image generation mode. It is promotional artwork, not a screenshot. References were the actual running-app capture `clock-live.png` and the original duck, bear, and mouse sprites (`visitor-07.png`, `visitor-14.png`, and `visitor-17.png`).
+
+## Final prompt
+
+Create a polished wide landscape GitHub README marketing hero for KookieClock, a charming Windows desktop cuckoo clock. Use the supplied actual application screenshot as the faithful product reference: preserve its natural pale timber house, turquoise roof and base, paired butter-yellow arched doors, coral flowers, cream clock dial with correct 1–12 numerals and dark slim hands, little flower pendulum and two hanging weights. Use the three supplied actual character sprites as faithful references for the yellow duck, caramel bear, and lavender mouse; enlarge naturally without inventing outfits or changing their identities. Composition: premium Scandinavian wooden-toy catalog photography on warm ivory seamless studio background; clock prominently on right, three small solid painted wooden critters grouped at its foot; generous clear editorial space left. Soft daylight, realistic wood grain, satin hand-painted finish, warm shadows, charming and restrained. Exact title text upper left: "KookieClock". Below title, exact two-line tagline: "A little company." and "Right on time." Small bottom-left line: "24 little friends. One lovely clock." Use beautifully spaced dark deep-teal editorial typography, title large, readable, minimal. Keep all product components fully inside the canvas; pendulum and weights visible. No computers, no app frames, no fake controls, no operating-system logos, no badges, no extra text. This is promotional artwork, not a screenshot. Wide approximately 3:2 landscape composition.
+
+## App screenshots
+
+`clock-live.png` and `visitor-gallery.png` are actual Windows application captures. Only empty capture-canvas padding was removed. No application pixels were generated or retouched. The portraits in the README are the original in-app sprite assets, not new promotional interpretations.

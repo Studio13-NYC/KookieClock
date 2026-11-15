@@ -17,9 +17,12 @@ try {
     New-Item -ItemType Directory -Path $packageDocs -Force | Out-Null
     Get-ChildItem -LiteralPath (Join-Path $projectRoot 'docs') -Filter '*.md' -File |
         Copy-Item -Destination $packageDocs -Force
+    Copy-Item -LiteralPath (Join-Path $projectRoot 'docs\images') -Destination $packageDocs -Recurse -Force
     $packageArt = Join-Path $package 'assets\woodland'
     New-Item -ItemType Directory -Path $packageArt -Force | Out-Null
     Copy-Item -LiteralPath (Join-Path $projectRoot 'assets\woodland\house.png') -Destination $packageArt -Force
+    Get-ChildItem -LiteralPath (Join-Path $projectRoot 'assets\woodland') -Filter 'visitor-??.png' -File |
+        Copy-Item -Destination $packageArt -Force
     $archive = Join-Path $projectRoot 'dist\LittleTimber-0.1.0-windows-x64.zip'
     Compress-Archive -LiteralPath $package -DestinationPath $archive -Force
     Get-Item -LiteralPath (Join-Path $package 'LittleTimber.exe'),$archive | Select-Object FullName,Length
