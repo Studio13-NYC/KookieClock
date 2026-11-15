@@ -1,0 +1,29 @@
+{
+  "created": "2026-11-10",
+  "provider": "Runway",
+  "kind": "AI-generated naturalistic effects, not field recordings",
+  "total_credits": 5,
+  "sources": [
+    {
+      "name": "duck",
+      "taskId": "421f1ae0-1ccc-4496-ab39-0ee86b5abd9b",
+      "prompt": "A small calm duck makes two short natural soft quacks, the second quieter. Close dry wildlife sound, breathy nasal texture with irregular organic rasp, warm and friendly, never loud or honking. Both quacks finish within the first 1.3 seconds, then silence. Isolated clean sound effect, no background birds, water, music, voice, reverb, electronic tones or cartoon squeaks.",
+      "duration": 2,
+      "credits": 2
+    },
+    {
+      "name": "mouse",
+      "taskId": "cab41574-a325-473b-afc5-59ef746dcb53",
+      "prompt": "One tiny mouse claw makes a very short delicate dry scratch across smooth unfinished wood. Close-up natural Foley, a fine granular scrape lasting about 0.12 seconds followed by silence. Very small, soft and tactile, no squeak, no chirp, no voice, no tonal ringing, no music, no room ambience. Not a large animal, not sandpaper sawing back and forth.",
+      "duration": 0.5,
+      "credits": 1
+    },
+    {
+      "name": "bear",
+      "taskId": "ae86ce9b-655b-44e5-8379-9a69bb9de51d",
+      "prompt": "A relaxed bear gives one very gentle low breathy rumbling grumble, like a sleepy contented exhale. Natural irregular throat texture with soft air and rounded body, intimate and warm. Begins softly, swells a little then settles into silence. Not threatening, no loud roar, no snarl, no human voice, no musical pitch or electronic buzz. Clean isolated dry wildlife-style sound, no background.",
+      "duration": 1.5,
+      "credits": 2
+    }
+  ]
+}

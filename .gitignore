@@ -1,0 +1,15 @@
+/target/
+/dist/
+/artifacts/
+/assets/woodland/*.blend1
+
+# Unrelated project in this shared working folder.
+/gift-registry/
+
+# Local configuration and developer caches.
+.env
+.env.*
+!.env.example
+__pycache__/
+*.pyc
+.DS_Store

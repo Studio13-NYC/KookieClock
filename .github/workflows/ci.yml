@@ -1,0 +1,55 @@
+name: Build and test
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  windows:
+    name: Windows application
+    runs-on: windows-2022
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify UTF-8 text
+        run: python tools/check_utf8.py
+      - name: Install stable Rust
+        run: rustup update stable --no-self-update
+      - name: Check formatting
+        run: cargo +stable fmt --check
+      - name: Check code
+        run: cargo +stable clippy --locked --all-targets -- -D warnings
+      - name: Test
+        run: cargo +stable test --locked --release
+      - name: Build
+        run: cargo +stable build --locked --release
+      - name: Package
+        run: ./tools/package.ps1 -SkipBuild
+      - uses: actions/upload-artifact@v4
+        with:
+          name: KookieClock-windows-x64
+          path: dist/LittleTimber-0.1.0-windows-x64.zip
+          if-no-files-found: error
+
+  portable-core:
+    name: Portable core (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-15, macos-15-intel, ubuntu-24.04]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install stable Rust
+        run: rustup update stable --no-self-update
+      - name: Check portable library
+        run: cargo +stable clippy --locked --lib -- -D warnings
+      - name: Test clock, choreography, and audio
+        run: cargo +stable test --locked --release --lib
