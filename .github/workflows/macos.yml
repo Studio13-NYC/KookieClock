@@ -34,7 +34,7 @@ jobs:
       - name: Build native bundle
         run: |
           bash tools/package-macos.sh
-          lipo -verify_arch ${{ matrix.arch }} dist/macos/KookieClock.app/Contents/MacOS/KookieClock
+          lipo dist/macos/KookieClock.app/Contents/MacOS/KookieClock -verify_arch ${{ matrix.arch }}
       - name: Launch the app from its distributable ZIP
         timeout-minutes: 2
         run: |

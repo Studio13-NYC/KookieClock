@@ -103,11 +103,11 @@ Controls include volume, sound choices, quiet hours, snooze, separate hour/half-
 | Platform | Current status |
 | --- | --- |
 | Windows x64 | Working native Win32/GDI+ application and portable ZIP |
-| macOS Apple Silicon | Portable Rust core checked in CI; desktop interface still to be implemented |
-| macOS Intel | Portable Rust core checked in CI; desktop interface still to be implemented |
+| macOS Apple Silicon | Native AppKit preview with a GitHub Actions build |
+| macOS Intel | Native AppKit preview with a GitHub Actions build |
 | Linux | Portable Rust core checked in CI; no desktop interface |
 
-**There is no Mac application download yet.** The scheduler, settings model, shuffled cast, choreography, and audio mixer are a shared Rust library. A Mac port needs a native window, renderer, controls, playback, and OS integration. See [the Mac port assessment](docs/macos.md).
+The Mac preview builds on the shared Rust library. See the [Mac build and test guide](docs/macos.md) for preview bundles, controls, and release status.
 
 ## Build and test
 
@@ -129,14 +129,14 @@ The portable core can be tested on Windows, macOS, or Linux:
 cargo test --locked --release --lib
 ```
 
-There are 17 automated tests covering scheduling, quiet/mute/snooze, shuffling, solid travel and door ordering, audio synchronization, bell counts, sample boundaries, and headroom. One additional ignored test exports audition WAVs. Mac core tests do **not** establish Mac UI, audio-device playback, or desktop behavior.
+There are 17 automated tests covering scheduling, quiet/mute/snooze, shuffling, solid travel and door ordering, audio synchronization, bell counts, sample boundaries, and headroom. One additional ignored test exports audition WAVs. The Mac workflow also runs a desktop check using the packaged app.
 
 All repository text uses **UTF-8**, without a byte-order mark. Editor defaults are in `.editorconfig`; CI checks the encoding of tracked text files.
 
 ## Documentation and assets
 
 - [Windows user and developer guide](docs/windows-guide.md): settings, commands, build instructions, and prior desktop verification.
-- [Mac port assessment](docs/macos.md): reusable code, remaining work, and validation limits.
+- [Mac build and test guide](docs/macos.md)
 - [Clock behavior and sound research](docs/cuckoo-behavior-and-sound-research.md).
 - [Audio provenance](assets/audio/provenance.json): generated samples and their source prompts.
 - `tools/render_woodland.py` and `assets/woodland/clock-source.blend`: original artwork source.

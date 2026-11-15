@@ -416,6 +416,10 @@ static NSStackView *WindowContent(NSArray<NSView *> *views) {
     [self resizeClockResetPosition:YES];
 }
 
+- (void)applicationDidChangeScreenParameters:(NSNotification *)notification {
+    [self resizeClockResetPosition:NO];
+}
+
 - (NSStackView *)settingsContent {
     NSArray *modes = @[@"Cuckoo", @"Zen", @"Silent"];
     NSInteger mode = [modes indexOfObject:_settings[@"mode"]];

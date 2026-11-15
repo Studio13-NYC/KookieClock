@@ -1,37 +1,32 @@
-# Mac port assessment
+# KookieClock on macOS
 
-## Current state
+The Mac preview uses AppKit for the desktop clock, context menu, settings, and visitor gallery. It shares the artwork, visit schedule, two shuffled casts, character movement, and sound mix with the Windows app.
 
-KookieClock ships a Windows application. It does not yet ship a macOS `.app`.
+## Run a locally built copy
 
-The portable Rust library exposes the existing `model`, `cast`, and `audio` modules. Both the Windows application and library tests use these same implementations. Windows dependencies and resource compilation are platform-gated. GitHub Actions runs the 17 core tests on Apple Silicon (`macos-15`), Intel (`macos-15-intel`), Linux, and Windows. The workflow run, rather than this document, is the authority on a particular commit's results.
+Install Rust, Python 3, and the Xcode Command Line Tools on a Mac. From the repository:
 
-On a Mac with Rust installed, `cargo test --locked --release --lib` tests the portable core. A plain `cargo run` still targets the Windows frontend and is not a way to launch a Mac app.
+```sh
+bash tools/package-macos.sh
+open dist/macos/KookieClock.app
+```
 
-## Feasibility without owning a Mac
+The script builds for the Mac it runs on and writes `dist/macos/KookieClock-macos-arm64.zip` or `dist/macos/KookieClock-macos-x86_64.zip`. The deployment target is macOS 13. GitHub Actions builds and runs the desktop check on macOS 15 using separate Apple Silicon and Intel runners.
 
-A Mac version is technically feasible. The 24 character atlases, door frames, house artwork, audio assets, scheduler, sound synthesis, and choreography can be reused. The main work is replacing the Win32 frontend, not re-creating the clock's behavior or artwork.
+## Controls
 
-GitHub provides standard hosted Intel and Apple Silicon macOS runners; standard runners are free for public repositories. These can build a Mac app and run automated tests without the developer owning a Mac. They are not a substitute for hands-on testing of desktop placement, Spaces, fullscreen apps, sleep/resume, hotkeys, Retina displays, and perceived sound synchronization. [GitHub runner documentation](https://docs.github.com/en/actions/reference/runners/github-hosted-runners)
+- Drag the clock to move it. Right-click the clock or click the clock icon in the menu bar to open its controls.
+- Control–Option–C brings it forward. Choose **Send Behind Windows** to put it back. If another app already uses the shortcut, use the menu bar item.
+- At the hour and half-hour, the clock uses a floating window for the visit and returns to its previous level when the visit ends. Settings include sound mode, voice, bell, volume, visit intervals, quiet hours, motion, and clock size.
+- Choose **Visit → Meet the Visitors** to select and preview any of the 24 friends. **Sound** also offers snooze and resume.
+- macOS saves settings and clock position in the app's preferences. Startup at login and changing the shortcut are not part of this preview.
 
-Engineering assessment: high confidence that a working Mac port can be built. Confidence in a polished public release remains lower until at least one Mac user tests it. No percentage would be a measured probability here.
+## Build checks
 
-## Proposed native implementation
+The [Mac workflow](https://github.com/Studio13-NYC/KookieClock/actions/workflows/macos.yml) tests the shared Rust library, packages the app, extracts each ZIP, and runs the app from that copy. Its desktop check opens settings and the visitor gallery, verifies that the clock draws, and walks through a scheduled-path visit with Dot, including the open door, return, closure, floating window, and soundtrack decoding. The log records whether the runner accepts audio playback. App captures and preview ZIPs are attached to the run when those steps succeed.
 
-Keep the Rust library as the one source for scheduling, shuffle state, pose calculations, and PCM soundtracks. Add an AppKit frontend with native drawing and controls, using the same rendered assets. Avoid a browser runtime or a separate copy of clock logic.
-
-Remaining work:
-
-1. Transparent, draggable desktop window; temporary floating placement during scheduled visits; reliable return behind normal windows.
-2. Core Graphics rendering of the existing image layers, clipped character frames, and live hands.
-3. Native settings, context menu, menu-bar access, and global shortcut.
-4. Audio playback tied to the same monotonic visit timeline, with cancellation on stop/suspend/stall.
-5. Mac settings storage, launch-at-login integration, and display/Spaces behavior.
-6. Apple Silicon and Intel builds, `.app` packaging, and desktop smoke tests.
-7. Mac-user testing of visuals, audio, and ordinary desktop use.
+Those checks use a diagnostic visit. A Mac user still needs to verify a live hour boundary, the shortcut and desktop behavior across Spaces and fullscreen apps, sleep and wake, and sound from real speakers.
 
 ## Distribution
 
-For a normal downloadable public Mac release, plan for Developer ID signing and Apple notarization. This requires the appropriate Apple developer credentials; it is separate from compiling and testing the code. Do not publish an unsigned prototype as a verified, polished Mac release. [Apple distribution guidance](https://developer.apple.com/macos/distribution) and [notarization documentation](https://developer.apple.com/documentation/security/notarizing-macos-software-before-distribution/)
-
-No Mac hardware has been purchased, no Apple account has been enrolled, and no signing credentials are included in this repository.
+The build script uses ad hoc signing for development. The preview ZIPs are available through GitHub Actions for testing. Public distribution with the standard Gatekeeper experience requires Developer ID signing and Apple notarization. [Apple's distribution guidance](https://developer.apple.com/macos/distribution/)

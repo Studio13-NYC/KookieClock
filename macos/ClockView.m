@@ -63,6 +63,7 @@ static void DrawHand(CGFloat angle, CGFloat length, CGFloat width) {
         _images.countLimit = 32;
         _poses = [NSCache new];
         _poses.countLimit = 30;
+        _frameState.visitor = -1;
         self.accessibilityLabel = @"KookieClock. Right-click for controls.";
     }
     return self;
