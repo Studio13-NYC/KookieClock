@@ -137,6 +137,7 @@ All repository text uses **UTF-8**, without a byte-order mark. Editor defaults a
 
 - [Windows user and developer guide](docs/windows-guide.md): settings, commands, build instructions, and prior desktop verification.
 - [Mac build and test guide](docs/macos.md)
+- [Mac signing and GitHub release guide](docs/macos-release.md)
 - [Clock behavior and sound research](docs/cuckoo-behavior-and-sound-research.md).
 - [Audio provenance](assets/audio/provenance.json): generated samples and their source prompts.
 - `tools/render_woodland.py` and `assets/woodland/clock-source.blend`: original artwork source.

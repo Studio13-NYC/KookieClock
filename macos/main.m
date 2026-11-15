@@ -312,7 +312,7 @@ static NSStackView *WindowContent(NSArray<NSView *> *views) {
 
 - (void)refreshLoginItem {
     if (!_loginItem) return;
-    switch (SMAppService.mainApp.status) {
+    switch ([SMAppService mainAppService].status) {
         case SMAppServiceStatusEnabled:
             _loginItem.state = NSControlStateValueOn;
             _loginStatus.stringValue = @"Enabled";
@@ -333,7 +333,7 @@ static NSStackView *WindowContent(NSArray<NSView *> *views) {
 }
 
 - (void)changeLoginItem:(NSButton *)sender {
-    SMAppService *service = SMAppService.mainApp;
+    SMAppService *service = [SMAppService mainAppService];
     BOOL enabled = sender.state == NSControlStateValueOn;
     NSError *error = nil;
     BOOL changed = enabled ? [service registerAndReturnError:&error]
@@ -704,7 +704,7 @@ static NSStackView *WindowContent(NSArray<NSView *> *views) {
     if (![self handleHotkey:custom] || _panel.level != NSFloatingWindowLevel) {
         [self failSmoke:@"shortcut did not bring the clock forward"];
     }
-    SMAppService *login = SMAppService.mainApp;
+    SMAppService *login = [SMAppService mainAppService];
     SMAppServiceStatus before = login.status;
     if (before == SMAppServiceStatusNotRegistered || before == SMAppServiceStatusNotFound) {
         NSError *error = nil;

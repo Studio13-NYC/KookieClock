@@ -1,4 +1,4 @@
-name: macOS desktop preview
+name: macOS build and test
 
 on:
   push:
@@ -55,4 +55,33 @@ jobs:
         with:
           name: KookieClock-macos-${{ matrix.arch }}
           path: dist/macos/KookieClock-macos-${{ matrix.arch }}.zip
+          if-no-files-found: error
+
+  universal:
+    name: Verify universal app bundle
+    needs: app
+    runs-on: macos-15
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: KookieClock-macos-*
+          path: artifacts/macos-builds
+      - name: Combine the tested packages
+        run: |
+          bash tools/package-macos-universal.sh \
+            artifacts/macos-builds/KookieClock-macos-arm64/KookieClock-macos-arm64.zip \
+            artifacts/macos-builds/KookieClock-macos-x86_64/KookieClock-macos-x86_64.zip
+      - name: Launch the universal app
+        timeout-minutes: 2
+        run: |
+          mkdir -p artifacts/macos-universal-smoke
+          cd artifacts/macos-universal-smoke
+          ditto -x -k ../../dist/macos/KookieClock-macos-universal.zip .
+          ./KookieClock.app/Contents/MacOS/KookieClock --smoke-test
+      - uses: actions/upload-artifact@v4
+        with:
+          name: KookieClock-macos-universal
+          path: dist/macos/KookieClock-macos-universal.zip
           if-no-files-found: error
