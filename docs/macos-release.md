@@ -32,7 +32,7 @@ Use a strong unique export password. The PKCS#12 options make the file compatibl
 
 ## Store the GitHub credentials
 
-In **Settings → Environments**, create `macos-release` and restrict deployments to `main`. Add these environment secrets. GitHub restricts the signing job to `main` in the workflow as well.
+Open the [macos-release environment](https://github.com/Studio13-NYC/KookieClock/settings/environments) under **Settings → Environments**. It is already restricted to `main`. Add these environment secrets.
 
 | Secret | Value |
 | --- | --- |

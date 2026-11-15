@@ -13,6 +13,12 @@ open dist/macos/KookieClock.app
 
 The script builds for the Mac it runs on and writes `dist/macos/KookieClock-macos-arm64.zip` or `dist/macos/KookieClock-macos-x86_64.zip`. The deployment target is macOS 13. GitHub Actions builds and runs the desktop check on macOS 15 using separate Apple Silicon and Intel runners, then combines the tested builds into one universal ZIP.
 
+## Share a test build with a friend
+
+Download the `KookieClock-macos-universal` artifact at the bottom of a successful [Mac build](https://github.com/Studio13-NYC/KookieClock/actions/workflows/macos.yml). GitHub asks you to sign in. Extract the artifact and share the enclosed `KookieClock-macos-universal.zip`. Your friend can extract it and move `KookieClock.app` to Applications.
+
+The test build can be shared without Apple Developer membership. If macOS blocks the first launch and your friend trusts the copy you sent, macOS may offer **Open Anyway** under **System Settings → Privacy & Security** after they try to open the app. A managed Mac may restrict this choice. [Apple's instructions for opening downloaded apps](https://support.apple.com/en-us/102445)
+
 ## Controls
 
 - Drag the clock to move it. Right-click the clock or click the clock icon in the menu bar to open its controls.
