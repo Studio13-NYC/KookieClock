@@ -1,0 +1,58 @@
+name: macOS desktop preview
+
+on:
+  push:
+    branches: [main, 'macos/**']
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  app:
+    name: AppKit app (${{ matrix.arch }})
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: macos-15
+            arch: arm64
+          - runner: macos-15-intel
+            arch: x86_64
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify UTF-8 text
+        run: python3 tools/check_utf8.py
+      - name: Check and test the Rust core
+        run: |
+          cargo fmt --check
+          cargo clippy --locked --lib -- -D warnings
+          cargo test --locked --release --lib
+      - name: Build native bundle
+        run: |
+          bash tools/package-macos.sh
+          lipo -verify_arch ${{ matrix.arch }} dist/macos/KookieClock.app/Contents/MacOS/KookieClock
+      - name: Launch the app from its distributable ZIP
+        timeout-minutes: 2
+        run: |
+          mkdir -p artifacts/macos-smoke
+          cd artifacts/macos-smoke
+          ditto -x -k "../../dist/macos/KookieClock-macos-${{ matrix.arch }}.zip" .
+          codesign --verify --strict KookieClock.app
+          ./KookieClock.app/Contents/MacOS/KookieClock --smoke-test
+      - name: Upload desktop test captures
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: KookieClock-macos-${{ matrix.arch }}-captures
+          path: artifacts/macos-smoke/*.png
+          if-no-files-found: ignore
+      - name: Upload preview bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: KookieClock-macos-${{ matrix.arch }}
+          path: dist/macos/KookieClock-macos-${{ matrix.arch }}.zip
+          if-no-files-found: error

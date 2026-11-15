@@ -5,7 +5,7 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 EXTENSIONS = {".rs", ".md", ".toml", ".lock", ".json", ".yml", ".yaml",
-              ".py", ".ps1", ".rc", ".manifest", ".txt", ".sh"}
+              ".py", ".ps1", ".rc", ".manifest", ".txt", ".sh", ".m", ".h", ".plist"}
 NAMES = {".gitignore", ".gitattributes", ".editorconfig", "LICENSE"}
 paths = subprocess.check_output(["git", "ls-files", "-z"], cwd=ROOT).decode("utf-8").split("\0")
 checked = 0
