@@ -1,0 +1,40 @@
+{
+  "prepared": "2026-11-19",
+  "rate": 24000,
+  "format": "mono signed 16-bit little-endian PCM",
+  "method": "Original-speed field recordings and recorded movement Foley; trim, filter, fade, gain and placement.",
+  "sources": [
+    {
+      "file": "mallard-xc62258.ogg",
+      "url": "https://xeno-canto.org/62258",
+      "author": "Jonathon Jongsma",
+      "license": "CC-BY-SA-3.0",
+      "sha256": "8a42ac12fc1dad2096366722b52f4bd17bf8175c90f791e04b01b93f99d4faa3",
+      "derivatives": [
+        "dot.pcm"
+      ]
+    },
+    {
+      "file": "collared-dove-xc82758.mp3",
+      "url": "https://xeno-canto.org/82758",
+      "author": "Jonathon Jongsma",
+      "license": "CC-BY-SA-3.0",
+      "sha256": "fb66adadd9f37182727cfefae4959dfbb8aa33760f864b5c800101bd8621e883",
+      "derivatives": [
+        "pearl.pcm"
+      ]
+    },
+    {
+      "file": "fabric-flaps-580967.mp3",
+      "url": "https://freesound.org/people/PelicanPolice/sounds/580967/",
+      "author": "PelicanPolice",
+      "license": "CC0-1.0",
+      "sha256": "585ac326d2337c785da3fc003b0f99548b0913a3b6883c83c068f7b2b386367c",
+      "derivatives": [
+        "coco-paw-a.pcm",
+        "coco-paw-b.pcm",
+        "coco.pcm"
+      ]
+    }
+  ]
+}

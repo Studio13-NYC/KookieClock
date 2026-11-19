@@ -17,6 +17,7 @@ app="dist/macos/KookieClock.app"
 resources="$app/Contents/Resources"
 mkdir -p "$app/Contents/MacOS" "$resources/woodland"
 cp macos/Info.plist "$app/Contents/Info.plist"
+cp docs/sound-studies.md "$resources/AudioCredits.md"
 cp assets/woodland/{house,pendulum,doors-*,visitor-*}.png "$resources/woodland/"
 
 xcrun --sdk macosx clang -fobjc-arc -mmacosx-version-min="$MACOSX_DEPLOYMENT_TARGET" \

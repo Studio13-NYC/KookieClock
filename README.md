@@ -94,7 +94,7 @@ Original in-app portraits. Each friend has a different silhouette and its own sm
 
 Twelve birds visit on the hour and twelve woodland friends on the half-hour. Each cast shuffles without repeating until everyone has had a turn. Characters stay solid: doors open, the visitor enters from the left, performs, turns around, returns inside to the right, and the doors close before the time chimes.
 
-The opening bell, wooden door contacts, foot movements, character voice, and closing chimes share one soundtrack and animation timeline. Duck, mouse, and bear use embedded generated naturalistic samples; other voices and bells are synthesized. Zen mode offers singing bowls and temple bells.
+The opening bell, wooden door contacts, foot movements, character voice, and closing chimes share one soundtrack and animation timeline. Dot and Pearl use edited field recordings, and Coco uses recorded movement Foley. Mouse and bear use generated samples, with synthesis for the remaining voices and bells. [Sound studies and recording credits](docs/sound-studies.md). Zen mode offers singing bowls and temple bells.
 
 Controls include volume, sound choices, quiet hours, snooze, separate hour/half-hour switches, hour-count chimes, reduced motion, clock size, optional second hand/digital time, position locking, startup at sign-in, and a configurable hotkey.
 

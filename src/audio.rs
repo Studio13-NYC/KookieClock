@@ -4,9 +4,15 @@ use crate::{
 };
 use std::f32::consts::TAU;
 const RATE: u32 = 24000;
-// Most voices are procedural; duck, mouse and bear use embedded naturalistic
-// generated samples. All playback stays offline. See assets/audio/provenance.json.
-const DUCK: &[u8] = include_bytes!("../assets/audio/duck.pcm");
+// Dot and Pearl use edited field recordings, Coco uses recorded cloth Foley.
+// Mouse and bear use generated samples, and the remaining calls are procedural.
+// All playback stays offline. Sources and credits live in assets/audio/foley.
+const DUCK: &[u8] = include_bytes!("../assets/audio/foley/dot.pcm");
+const DOVE: &[u8] = include_bytes!("../assets/audio/foley/pearl.pcm");
+const RABBIT: [&[u8]; 2] = [
+    include_bytes!("../assets/audio/foley/coco-paw-a.pcm"),
+    include_bytes!("../assets/audio/foley/coco-paw-b.pcm"),
+];
 const BEAR: &[u8] = include_bytes!("../assets/audio/bear.pcm");
 const MOUSE: [&[u8]; 3] = [
     include_bytes!("../assets/audio/mouse-0.pcm"),
@@ -125,16 +131,12 @@ fn creature(id: usize, t: f32) -> f32 {
             throat(t, 0.42, 330., 450., 950., 0.25) + throat(t - 0.54, 0.48, 450., 280., 800., 0.3)
         }
         6 => throat(t, 0.22, 290., 220., 780., 0.2) + throat(t - 0.37, 0.24, 260., 205., 730., 0.2),
-        7 => sample_at(DUCK, t), // two soft quacks, second quieter
+        7 => sample_at(DUCK, t), // quiet end of a real mallard's decrescendo
         8 => (0..5)
             .map(|n| whistle(t - n as f32 * 0.16, 0.12, 2400., 3100.))
             .sum(),
         9 => knock(t - 0.75, 1050.) * 0.8, // deepest peck: atlas frame 6
-        10 => {
-            whistle(t, 0.24, 430., 380.)
-                + whistle(t - 0.32, 0.63, 375., 340.)
-                + whistle(t - 1.04, 0.25, 350., 330.)
-        }
+        10 => sample_at(DOVE, t),          // an intact short–long–short coo
         11 => {
             throat(t, 0.62, 570., 820., 1500., 0.15)
                 + throat(t - 0.78, 0.45, 780., 590., 1400., 0.12)
@@ -143,7 +145,7 @@ fn creature(id: usize, t: f32) -> f32 {
             throat(t, 0.21, 380., 260., 1100., 0.4)
                 + throat(t - 0.39, 0.26, 430., 270., 1200., 0.35)
         } // fox yips
-        13 => knock(t - 0.75, 180.) * 0.7 + knock(t - 1.5, 195.) * 0.5,
+        13 => sample_at(RABBIT[0], t) * 0.68 + sample_at(RABBIT[1], t - 0.75),
         14 => sample_at(BEAR, t), // irregular breath and low rumble, no oscillator
         15 => {
             throat(t, 0.35, 340., 570., 1300., 0.04) + throat(t - 0.3, 0.72, 570., 230., 900., 0.05)
@@ -621,7 +623,10 @@ mod tests {
     #[test]
     fn natural_samples_are_gentle_and_fit_the_existing_actions() {
         for (pcm, max_length, max_peak) in [
-            (DUCK, 0.8, 0.49),
+            (DUCK, 1.46, 0.37),
+            (DOVE, 1.56, 0.31),
+            (RABBIT[0], 0.24, 0.23),
+            (RABBIT[1], 0.26, 0.21),
             (BEAR, 1.36, 0.43),
             (MOUSE[0], 0.12, 0.25),
             (MOUSE[1], 0.12, 0.25),
@@ -645,6 +650,13 @@ mod tests {
         }
         assert_ne!(MOUSE[0], MOUSE[1]);
         assert_ne!(MOUSE[1], MOUSE[2]);
+        assert_ne!(RABBIT[0], RABBIT[1]);
+        // Coco's two grounded atlas poses are 0 and 6. Leave space between
+        // contacts instead of running a scrape or an animal cry across the hop.
+        assert!(creature(13, 0.06).abs() > 0.0001);
+        assert_eq!(creature(13, 0.5), 0.);
+        assert!(creature(13, 0.81).abs() > 0.0001);
+        assert_eq!(creature(13, 1.4), 0.);
         // Six paw strokes at the existing animation contact phases, with
         // silence between strokes instead of a continuous pitched scratching bed.
         for n in 0..6 {
@@ -803,6 +815,8 @@ mod tests {
             (6, Mode::Cuckoo, 0, 8, "mango-eight"),
             (7, Mode::Cuckoo, 0, 7, "duck"),
             (7, Mode::Cuckoo, 0, 2, "duck-two"),
+            (10, Mode::Cuckoo, 0, 1, "pearl"),
+            (13, Mode::Cuckoo, 0, 1, "coco"),
             (17, Mode::Cuckoo, 0, 1, "mouse"),
             (14, Mode::Cuckoo, 0, 1, "bear"),
             (9, Mode::Cuckoo, 0, 7, "woodpecker"),
@@ -840,6 +854,23 @@ mod tests {
                 format!("seconds,event\n{rows}\n"),
             )
             .unwrap();
+        }
+        let settings = Settings {
+            volume: 100,
+            ..Settings::default()
+        };
+        for (id, label) in [(7, "dot-solo"), (10, "pearl-solo"), (13, "coco-solo")] {
+            let visual = crate::model::visit_duration(duration(&settings, 1));
+            let samples = event_samples(
+                Event {
+                    at: 0.,
+                    sound: Sound::Voice,
+                },
+                id,
+                &settings,
+                visual,
+            );
+            std::fs::write(dir.join(format!("{label}.wav")), encode_wav(&samples, 0.65)).unwrap();
         }
     }
     #[test]
