@@ -134,5 +134,22 @@ under `artifacts/audio-qa`. Artifacts and loopback captures are not published.
 Automated coverage includes all 24 sample boundaries, headroom, distinct audio,
 silence/Zen behavior, contact repetition without drift, mouse claw phases,
 woodpecker peck placement, stopping before the turn, door order and bell counts.
-Native playback verification is recorded after the packaged Windows check.
-Technical verification cannot replace a listening review for artistic preference.
+
+All 24 friends were previewed through the native visitor gallery in the packaged
+Windows app. Output-only WASAPI captures had no buffer status flags. Each
+complete pre-chime visit matched its exported reference with correlation at
+least 0.99999903. Subtracting the bell/mechanism bed and comparing the character
+stem separately gave at least 0.99994285, including the very quiet Foley. This
+checks the actual character output rather than just matching the common bell.
+Settings and clock position compared unchanged; the regular scheduled shuffle
+advanced naturally at 11:00. That scheduled visit logged the turn, retreat and
+closed doors before the time strikes.
+
+The Windows build and portable tests passed on Windows, Linux, Intel Mac and
+Apple Silicon. Both Mac app bundles and the combined universal bundle passed
+the existing packaged desktop smoke checks, including audio decode and accepted
+playback. [Windows and core CI](https://github.com/Studio13-NYC/KookieClock/actions/runs/44768113962)
+and [Mac app checks](https://github.com/Studio13-NYC/KookieClock/actions/runs/44768108756).
+These runs test code commit `ff7c006`; the subsequent documentation records
+the completed native Windows check. Technical verification cannot replace a
+listening review for artistic preference.
