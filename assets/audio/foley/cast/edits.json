@@ -1,0 +1,641 @@
+[
+  {
+    "id": 0,
+    "name": "pip",
+    "description": "One complete natural two-note common cuckoo phrase.",
+    "repeat": false,
+    "peak": 0.29,
+    "rms": 0.075,
+    "events": [
+      {
+        "source": "pip",
+        "start": 0.29,
+        "end": 1.06,
+        "at": 0.15,
+        "low": 270,
+        "high": 1700,
+        "attack": 0.03,
+        "release": 0.07,
+        "gain": 1
+      }
+    ]
+  },
+  {
+    "id": 1,
+    "name": "rosie",
+    "description": "A short European robin song phrase, rather than an alarm tic.",
+    "repeat": false,
+    "peak": 0.27,
+    "rms": 0.05,
+    "events": [
+      {
+        "source": "rosie",
+        "start": 0.2,
+        "end": 1.22,
+        "at": 0.12,
+        "low": 2800,
+        "high": 8500,
+        "attack": 0.025,
+        "release": 0.06,
+        "gain": 1
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "name": "otis",
+    "description": "Two rounded great horned owl hoots, with the natural pause shortened.",
+    "repeat": false,
+    "peak": 0.27,
+    "rms": 0.08,
+    "events": [
+      {
+        "source": "otis",
+        "start": 1.03,
+        "end": 1.82,
+        "at": 0.03,
+        "low": 180,
+        "high": 850,
+        "attack": 0.055,
+        "release": 0.1,
+        "gain": 1
+      },
+      {
+        "source": "otis",
+        "start": 2.37,
+        "end": 2.92,
+        "at": 0.9,
+        "low": 180,
+        "high": 850,
+        "attack": 0.04,
+        "release": 0.1,
+        "gain": 0.83
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "name": "blue",
+    "description": "A quiet Eastern bluebird warble, retaining the recorded pitch.",
+    "repeat": false,
+    "peak": 0.27,
+    "rms": 0.055,
+    "events": [
+      {
+        "source": "blue",
+        "start": 0.94,
+        "end": 1.62,
+        "at": 0.22,
+        "low": 1500,
+        "high": 6000,
+        "attack": 0.035,
+        "release": 0.09,
+        "gain": 1
+      }
+    ]
+  },
+  {
+    "id": 4,
+    "name": "sunny",
+    "description": "Paper-brush Foley follows the crest folding and lifting; no cockatoo shriek.",
+    "repeat": true,
+    "peak": 0.15,
+    "rms": 0.026,
+    "events": [
+      {
+        "source": "paper",
+        "start": 0.49,
+        "end": 0.77,
+        "at": 0.25,
+        "low": 1000,
+        "high": 5400,
+        "attack": 0.03,
+        "release": 0.07,
+        "gain": 0.85
+      },
+      {
+        "source": "paper",
+        "start": 2.0,
+        "end": 2.34,
+        "at": 0.75,
+        "low": 1000,
+        "high": 5400,
+        "attack": 0.03,
+        "release": 0.1,
+        "gain": 1
+      }
+    ]
+  },
+  {
+    "id": 5,
+    "name": "pebble",
+    "description": "Alternating soft cloth flipper steps.",
+    "repeat": true,
+    "peak": 0.19,
+    "rms": 0.036,
+    "events": [
+      {
+        "source": "cloth",
+        "start": 1.81,
+        "end": 2.01,
+        "at": 0,
+        "low": 85,
+        "high": 1500,
+        "attack": 0.008,
+        "release": 0.06,
+        "gain": 1
+      },
+      {
+        "source": "cloth",
+        "start": 5.72,
+        "end": 5.94,
+        "at": 0.75,
+        "low": 85,
+        "high": 1500,
+        "attack": 0.01,
+        "release": 0.07,
+        "gain": 0.86
+      }
+    ]
+  },
+  {
+    "id": 6,
+    "name": "mango",
+    "description": "A short white-throated toucan phrase, aligned with the beak nod.",
+    "repeat": false,
+    "peak": 0.24,
+    "rms": 0.055,
+    "events": [
+      {
+        "source": "mango",
+        "start": 0.65,
+        "end": 1.43,
+        "at": 0.48,
+        "low": 750,
+        "high": 4500,
+        "attack": 0.035,
+        "release": 0.085,
+        "gain": 1
+      }
+    ]
+  },
+  {
+    "id": 8,
+    "name": "fern",
+    "description": "One small greenfinch twitter, with high-frequency edge softened.",
+    "repeat": false,
+    "peak": 0.26,
+    "rms": 0.05,
+    "events": [
+      {
+        "source": "fern",
+        "start": 5.42,
+        "end": 6.7,
+        "at": 0.08,
+        "low": 2000,
+        "high": 7200,
+        "attack": 0.04,
+        "release": 0.1,
+        "gain": 1
+      }
+    ]
+  },
+  {
+    "id": 9,
+    "name": "knock",
+    "description": "A recorded light wood tap at the deepest peck, atlas frame 6.",
+    "repeat": true,
+    "peak": 0.24,
+    "rms": 0.04,
+    "events": [
+      {
+        "source": "wood",
+        "start": 0.185,
+        "end": 0.345,
+        "at": 0.75,
+        "low": 200,
+        "high": 4000,
+        "attack": 0.003,
+        "release": 0.06,
+        "gain": 1
+      }
+    ]
+  },
+  {
+    "id": 11,
+    "name": "indigo",
+    "description": "Two broad paper-feather sweeps follow the fan sway.",
+    "repeat": true,
+    "peak": 0.17,
+    "rms": 0.032,
+    "events": [
+      {
+        "source": "paper",
+        "start": 1.66,
+        "end": 2.12,
+        "at": 0.125,
+        "low": 700,
+        "high": 4600,
+        "attack": 0.055,
+        "release": 0.11,
+        "gain": 0.8
+      },
+      {
+        "source": "paper",
+        "start": 3.48,
+        "end": 3.94,
+        "at": 0.875,
+        "low": 700,
+        "high": 4600,
+        "attack": 0.055,
+        "release": 0.11,
+        "gain": 1
+      }
+    ]
+  },
+  {
+    "id": 12,
+    "name": "clover",
+    "description": "A tiny sniff and soft tail brush, human breath and cloth Foley.",
+    "repeat": true,
+    "peak": 0.18,
+    "rms": 0.032,
+    "events": [
+      {
+        "source": "breath",
+        "start": 0.25,
+        "end": 0.64,
+        "at": 0.16,
+        "low": 350,
+        "high": 2100,
+        "attack": 0.05,
+        "release": 0.1,
+        "gain": 0.8
+      },
+      {
+        "source": "cloth",
+        "start": 3.2,
+        "end": 3.55,
+        "at": 0.87,
+        "low": 350,
+        "high": 2800,
+        "attack": 0.04,
+        "release": 0.1,
+        "gain": 0.7
+      }
+    ]
+  },
+  {
+    "id": 14,
+    "name": "bruno",
+    "description": "One low relaxed exhale and a cloth paw wave. Human breath Foley, not a bear roar.",
+    "repeat": false,
+    "peak": 0.24,
+    "rms": 0.05,
+    "events": [
+      {
+        "source": "breath",
+        "start": 1.45,
+        "end": 2.65,
+        "at": 0.08,
+        "low": 100,
+        "high": 1150,
+        "attack": 0.09,
+        "release": 0.18,
+        "gain": 1
+      },
+      {
+        "source": "cloth",
+        "start": 5.72,
+        "end": 5.94,
+        "at": 0.75,
+        "low": 100,
+        "high": 1500,
+        "attack": 0.025,
+        "release": 0.07,
+        "gain": 0.27
+      }
+    ]
+  },
+  {
+    "id": 15,
+    "name": "clementine",
+    "description": "A real cat purr, with soft head-tilt-length edges.",
+    "repeat": false,
+    "peak": 0.26,
+    "rms": 0.06,
+    "events": [
+      {
+        "source": "cat",
+        "start": 0.78,
+        "end": 2.14,
+        "at": 0.07,
+        "low": 55,
+        "high": 1700,
+        "attack": 0.12,
+        "release": 0.18,
+        "gain": 1
+      }
+    ]
+  },
+  {
+    "id": 16,
+    "name": "hazel",
+    "description": "Two little sniffles, edited from short human-breath takes as Foley.",
+    "repeat": true,
+    "peak": 0.18,
+    "rms": 0.03,
+    "events": [
+      {
+        "source": "breath",
+        "start": 0.21,
+        "end": 0.45,
+        "at": 0.08,
+        "low": 450,
+        "high": 2600,
+        "attack": 0.04,
+        "release": 0.07,
+        "gain": 1
+      },
+      {
+        "source": "breath",
+        "start": 0.53,
+        "end": 0.82,
+        "at": 0.78,
+        "low": 450,
+        "high": 2600,
+        "attack": 0.045,
+        "release": 0.09,
+        "gain": 0.78
+      }
+    ]
+  },
+  {
+    "id": 17,
+    "name": "miso",
+    "description": "Six fine paper-friction claw strokes follow the alternating animated paws.",
+    "repeat": true,
+    "peak": 0.17,
+    "rms": 0.03,
+    "events": [
+      {
+        "source": "paper",
+        "start": 0.58,
+        "end": 0.6649999999999999,
+        "at": 0.125,
+        "low": 650,
+        "high": 3600,
+        "attack": 0.009,
+        "release": 0.026,
+        "gain": 1
+      },
+      {
+        "source": "paper",
+        "start": 0.79,
+        "end": 0.875,
+        "at": 0.375,
+        "low": 650,
+        "high": 3600,
+        "attack": 0.009,
+        "release": 0.026,
+        "gain": 0.82
+      },
+      {
+        "source": "paper",
+        "start": 1.87,
+        "end": 1.955,
+        "at": 0.625,
+        "low": 650,
+        "high": 3600,
+        "attack": 0.009,
+        "release": 0.026,
+        "gain": 0.93
+      },
+      {
+        "source": "paper",
+        "start": 2.14,
+        "end": 2.225,
+        "at": 0.875,
+        "low": 650,
+        "high": 3600,
+        "attack": 0.009,
+        "release": 0.026,
+        "gain": 0.88
+      },
+      {
+        "source": "paper",
+        "start": 3.63,
+        "end": 3.715,
+        "at": 1.125,
+        "low": 650,
+        "high": 3600,
+        "attack": 0.009,
+        "release": 0.026,
+        "gain": 0.96
+      },
+      {
+        "source": "paper",
+        "start": 4.13,
+        "end": 4.215,
+        "at": 1.375,
+        "low": 650,
+        "high": 3600,
+        "attack": 0.009,
+        "release": 0.026,
+        "gain": 0.8
+      }
+    ]
+  },
+  {
+    "id": 18,
+    "name": "moss",
+    "description": "A small field-recorded frog croak at the grounded start of the leap.",
+    "repeat": false,
+    "peak": 0.26,
+    "rms": 0.055,
+    "events": [
+      {
+        "source": "moss",
+        "start": 0.28,
+        "end": 0.88,
+        "at": 0.0,
+        "low": 650,
+        "high": 4900,
+        "attack": 0.035,
+        "release": 0.09,
+        "gain": 1
+      }
+    ]
+  },
+  {
+    "id": 19,
+    "name": "fawn",
+    "description": "A light wooden hoof contact when the stepping leg returns, plus a tiny settling contact.",
+    "repeat": true,
+    "peak": 0.2,
+    "rms": 0.032,
+    "events": [
+      {
+        "source": "wood",
+        "start": 0.515,
+        "end": 0.675,
+        "at": 0,
+        "low": 130,
+        "high": 1800,
+        "attack": 0.004,
+        "release": 0.055,
+        "gain": 1
+      },
+      {
+        "source": "wood",
+        "start": 0.85,
+        "end": 1.01,
+        "at": 0.1,
+        "low": 130,
+        "high": 1800,
+        "attack": 0.004,
+        "release": 0.055,
+        "gain": 0.32
+      }
+    ]
+  },
+  {
+    "id": 20,
+    "name": "acorn",
+    "description": "Three small nut nibbles from recorded carrot crunches while the acorn is raised.",
+    "repeat": true,
+    "peak": 0.21,
+    "rms": 0.036,
+    "events": [
+      {
+        "source": "nibble",
+        "start": 3.4,
+        "end": 3.57,
+        "at": 0.5,
+        "low": 450,
+        "high": 4600,
+        "attack": 0.012,
+        "release": 0.06,
+        "gain": 0.72
+      },
+      {
+        "source": "nibble",
+        "start": 4.52,
+        "end": 4.69,
+        "at": 0.75,
+        "low": 450,
+        "high": 4600,
+        "attack": 0.012,
+        "release": 0.06,
+        "gain": 1
+      },
+      {
+        "source": "nibble",
+        "start": 14.88,
+        "end": 15.05,
+        "at": 1.0,
+        "low": 450,
+        "high": 4600,
+        "attack": 0.012,
+        "release": 0.06,
+        "gain": 0.62
+      }
+    ]
+  },
+  {
+    "id": 21,
+    "name": "bandit",
+    "description": "Quiet cloth paw rubs follow the side-to-side inspection.",
+    "repeat": true,
+    "peak": 0.16,
+    "rms": 0.029,
+    "events": [
+      {
+        "source": "cloth",
+        "start": 2.6,
+        "end": 2.87,
+        "at": 0.25,
+        "low": 300,
+        "high": 2400,
+        "attack": 0.03,
+        "release": 0.08,
+        "gain": 1
+      },
+      {
+        "source": "paper",
+        "start": 3.5,
+        "end": 3.7,
+        "at": 1.0,
+        "low": 300,
+        "high": 2400,
+        "attack": 0.025,
+        "release": 0.075,
+        "gain": 0.38
+      }
+    ]
+  },
+  {
+    "id": 22,
+    "name": "bamboo",
+    "description": "Two soft bamboo-style nibbles from different carrot contacts, near the raised prop.",
+    "repeat": true,
+    "peak": 0.23,
+    "rms": 0.04,
+    "events": [
+      {
+        "source": "nibble",
+        "start": 15.4,
+        "end": 15.64,
+        "at": 0.625,
+        "low": 160,
+        "high": 3100,
+        "attack": 0.018,
+        "release": 0.08,
+        "gain": 1
+      },
+      {
+        "source": "nibble",
+        "start": 16.15,
+        "end": 16.37,
+        "at": 0.95,
+        "low": 160,
+        "high": 3100,
+        "attack": 0.018,
+        "release": 0.08,
+        "gain": 0.65
+      }
+    ]
+  },
+  {
+    "id": 23,
+    "name": "olive",
+    "description": "Two soft cloth-and-paper fish-cradle rubs at the sway extremes.",
+    "repeat": true,
+    "peak": 0.17,
+    "rms": 0.03,
+    "events": [
+      {
+        "source": "cloth",
+        "start": 4.25,
+        "end": 4.55,
+        "at": 0.25,
+        "low": 250,
+        "high": 3200,
+        "attack": 0.035,
+        "release": 0.1,
+        "gain": 1
+      },
+      {
+        "source": "paper",
+        "start": 2.03,
+        "end": 2.28,
+        "at": 1.0,
+        "low": 250,
+        "high": 3200,
+        "attack": 0.03,
+        "release": 0.08,
+        "gain": 0.44
+      }
+    ]
+  }
+]

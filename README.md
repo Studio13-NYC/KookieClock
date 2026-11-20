@@ -94,7 +94,7 @@ Original in-app portraits. Each friend has a different silhouette and its own sm
 
 Twelve birds visit on the hour and twelve woodland friends on the half-hour. Each cast shuffles without repeating until everyone has had a turn. Characters stay solid: doors open, the visitor enters from the left, performs, turns around, returns inside to the right, and the doors close before the time chimes.
 
-The opening bell, wooden door contacts, foot movements, character voice, and closing chimes share one soundtrack and animation timeline. Dot and Pearl use edited field recordings, and Coco uses recorded movement Foley. Mouse and bear use generated samples, with synthesis for the remaining voices and bells. [Sound studies and recording credits](docs/sound-studies.md). Zen mode offers singing bowls and temple bells.
+The opening bell, wooden door contacts, foot movements, character voice, and closing chimes share one soundtrack and animation timeline. All 24 character greetings use natural recordings or recorded movement Foley: real bird phrases, a cat purr, a frog croak, tiny paw contacts, feather rustles and food nibbles. Movement sounds follow the character animation; quieter animals use Foley rather than loud calls. Alternate cuckoo voices and bells retain their sound synthesis. [Sound studies and recording credits](docs/sound-studies.md). Zen mode offers singing bowls and temple bells.
 
 Controls include volume, sound choices, quiet hours, snooze, separate hour/half-hour switches, hour-count chimes, reduced motion, clock size, optional second hand/digital time, position locking, startup at sign-in, and a configurable hotkey.
 
@@ -128,7 +128,7 @@ The portable core can be tested on Windows, macOS, or Linux:
 cargo test --locked --release --lib
 ```
 
-There are 17 automated tests covering scheduling, quiet/mute/snooze, shuffling, solid travel and door ordering, audio synchronization, bell counts, sample boundaries, and headroom. One additional ignored test exports audition WAVs. The Mac workflow also runs a desktop check using the packaged app.
+There are 18 automated tests covering scheduling, quiet/mute/snooze, shuffling, solid travel and door ordering, audio synchronization, bell counts, sample boundaries, and headroom. One additional ignored test exports audition WAVs. The Mac workflow also runs a desktop check using the packaged app.
 
 All repository text uses **UTF-8**, without a byte-order mark. Editor defaults are in `.editorconfig`; CI checks the encoding of tracked text files.
 
@@ -137,7 +137,7 @@ All repository text uses **UTF-8**, without a byte-order mark. Editor defaults a
 - [Windows user and developer guide](docs/windows-guide.md): settings, commands, build instructions, and prior desktop verification.
 - [Mac build and test guide](docs/macos.md)
 - [Clock behavior and sound research](docs/cuckoo-behavior-and-sound-research.md).
-- [Audio provenance](assets/audio/provenance.json): generated samples and their source prompts.
+- [Recorded audio sources and licenses](assets/audio/foley/README.md); [exact new edits](assets/audio/foley/cast/edits.json). Legacy generated samples and their prompts remain in [historical provenance](assets/audio/provenance.json).
 - `tools/render_woodland.py` and `assets/woodland/clock-source.blend`: original artwork source.
 - `src/lib.rs`: shared Rust clock and audio library; `src/main.rs`, `src/ui.rs`, and `src/draw.rs`: Windows application.
 

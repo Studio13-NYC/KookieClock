@@ -2,7 +2,7 @@
   "created": "2026-11-10",
   "provider": "Runway",
   "kind": "AI-generated naturalistic effects, not field recordings",
-  "current_use": "Mouse and bear remain in use. The generated duck is retained as a legacy source. Dot, Pearl and Coco now use the field-recording and Foley sources credited in foley/README.md.",
+  "current_use": "Legacy generated samples retained for provenance only. All 24 active individual character voices now use the recorded sources and Foley credited in foley/README.md and foley/cast/provenance.json.",
   "total_credits": 5,
   "sources": [
     {

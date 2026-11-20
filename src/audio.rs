@@ -4,21 +4,37 @@ use crate::{
 };
 use std::f32::consts::TAU;
 const RATE: u32 = 24000;
-// Dot and Pearl use edited field recordings, Coco uses recorded cloth Foley.
-// Mouse and bear use generated samples, and the remaining calls are procedural.
-// All playback stays offline. Sources and credits live in assets/audio/foley.
-const DUCK: &[u8] = include_bytes!("../assets/audio/foley/dot.pcm");
-const DOVE: &[u8] = include_bytes!("../assets/audio/foley/pearl.pcm");
-const RABBIT: [&[u8]; 2] = [
-    include_bytes!("../assets/audio/foley/coco-paw-a.pcm"),
-    include_bytes!("../assets/audio/foley/coco-paw-b.pcm"),
+// Original-speed field recordings and recorded prop Foley for all 24 friends.
+// All playback stays offline. Sources, licenses and exact edits are in assets/audio/foley.
+const VOICES: [&[u8]; 24] = [
+    include_bytes!("../assets/audio/foley/cast/pip.pcm"),
+    include_bytes!("../assets/audio/foley/cast/rosie.pcm"),
+    include_bytes!("../assets/audio/foley/cast/otis.pcm"),
+    include_bytes!("../assets/audio/foley/cast/blue.pcm"),
+    include_bytes!("../assets/audio/foley/cast/sunny.pcm"),
+    include_bytes!("../assets/audio/foley/cast/pebble.pcm"),
+    include_bytes!("../assets/audio/foley/cast/mango.pcm"),
+    include_bytes!("../assets/audio/foley/dot.pcm"),
+    include_bytes!("../assets/audio/foley/cast/fern.pcm"),
+    include_bytes!("../assets/audio/foley/cast/knock.pcm"),
+    include_bytes!("../assets/audio/foley/pearl.pcm"),
+    include_bytes!("../assets/audio/foley/cast/indigo.pcm"),
+    include_bytes!("../assets/audio/foley/cast/clover.pcm"),
+    include_bytes!("../assets/audio/foley/coco.pcm"),
+    include_bytes!("../assets/audio/foley/cast/bruno.pcm"),
+    include_bytes!("../assets/audio/foley/cast/clementine.pcm"),
+    include_bytes!("../assets/audio/foley/cast/hazel.pcm"),
+    include_bytes!("../assets/audio/foley/cast/miso.pcm"),
+    include_bytes!("../assets/audio/foley/cast/moss.pcm"),
+    include_bytes!("../assets/audio/foley/cast/fawn.pcm"),
+    include_bytes!("../assets/audio/foley/cast/acorn.pcm"),
+    include_bytes!("../assets/audio/foley/cast/bandit.pcm"),
+    include_bytes!("../assets/audio/foley/cast/bamboo.pcm"),
+    include_bytes!("../assets/audio/foley/cast/olive.pcm"),
 ];
-const BEAR: &[u8] = include_bytes!("../assets/audio/bear.pcm");
-const MOUSE: [&[u8]; 3] = [
-    include_bytes!("../assets/audio/mouse-0.pcm"),
-    include_bytes!("../assets/audio/mouse-1.pcm"),
-    include_bytes!("../assets/audio/mouse-2.pcm"),
-];
+// Material contacts repeat with the twelve-frame / 8 fps articulated performance.
+// Vocal phrases (including Bruno's single exhale) happen once per visit.
+const MOVEMENT_FOLEY: &[usize] = &[4, 5, 9, 11, 12, 13, 16, 17, 19, 20, 21, 22, 23];
 
 // Headerless 24 kHz mono signed little-endian PCM prepared by the asset tool.
 fn sample_at(pcm: &[u8], t: f32) -> f32 {
@@ -69,36 +85,6 @@ fn air(t: f32, seed: u32, bandwidth: f32) -> f32 {
     noise(i / RATE as f32, seed) * (1. - f) + noise((i + 1.) / RATE as f32, seed) * f
 }
 
-fn whistle(t: f32, length: f32, from: f32, to: f32) -> f32 {
-    let phase = TAU * (from * t + (to - from) * t * t / (2. * length));
-    envelope(t, length, 0.035)
-        * (phase.sin() * (0.95 + 0.05 * (TAU * 5.3 * t).sin())
-            + 0.045 * (2. * phase).sin()
-            + 0.055 * air(t, 19, 2200.))
-        * 0.62
-}
-
-// A harmonic voice with a resonant mouth: nasal quacks, rounded growls,
-// meows and croaks need a different spectrum from a pure bird whistle.
-fn throat(t: f32, length: f32, from: f32, to: f32, formant: f32, rough: f32) -> f32 {
-    if !(0.0..length).contains(&t) {
-        return 0.;
-    }
-    let phase =
-        TAU * (from * t + (to - from) * t * t / (2. * length)) + rough * (TAU * 31. * t).sin();
-    let f = from + (to - from) * t / length;
-    let mut value = 0.;
-    let mut weight = 0.;
-    for harmonic in 1..=18 {
-        let h = harmonic as f32;
-        let resonance = (-((h * f - formant) / (formant * 0.32)).powi(2)).exp();
-        let amp = 0.7 / h + resonance * 0.75;
-        value += amp * (phase * h).sin();
-        weight += amp;
-    }
-    envelope(t, length, 0.055) * (value / weight * 1.5 + rough * 0.16 * air(t, 93, 1600.))
-}
-
 fn scratch(t: f32, length: f32, seed: u32) -> f32 {
     // Short high-passed friction strokes, with a faint wooden resonance.
     let hiss = air(t, seed, 4200.) - air(t, seed, 700.);
@@ -107,85 +93,8 @@ fn scratch(t: f32, length: f32, seed: u32) -> f32 {
         * (0.7 + 0.3 * (TAU * 47. * t).sin())
 }
 
-fn knock(t: f32, frequency: f32) -> f32 {
-    if !(0.0..0.12).contains(&t) {
-        return 0.;
-    }
-    (t / 0.002).min(1.)
-        * (-t * 55.).exp()
-        * ((TAU * frequency * t).sin() * 0.8 + noise(t, 45) * 0.12)
-}
-
 fn creature(id: usize, t: f32) -> f32 {
-    match id % 24 {
-        0 => whistle(t, 0.28, 660., 645.) + whistle(t - 0.36, 0.37, 520., 505.), // cuckoo
-        1 => {
-            whistle(t, 0.18, 1700., 2400.)
-                + whistle(t - 0.24, 0.22, 2100., 1600.)
-                + whistle(t - 0.54, 0.28, 1800., 2600.)
-        } // robin song
-        2 => whistle(t, 0.48, 350., 310.) + whistle(t - 0.65, 0.65, 310., 285.), // owl hoot
-        3 => whistle(t, 0.32, 1300., 2100.) + whistle(t - 0.45, 0.4, 1900., 1450.),
-        4 => throat(t, 0.32, 620., 470., 1800., 0.6) + throat(t - 0.5, 0.3, 570., 440., 1700., 0.5),
-        5 => {
-            throat(t, 0.42, 330., 450., 950., 0.25) + throat(t - 0.54, 0.48, 450., 280., 800., 0.3)
-        }
-        6 => throat(t, 0.22, 290., 220., 780., 0.2) + throat(t - 0.37, 0.24, 260., 205., 730., 0.2),
-        7 => sample_at(DUCK, t), // quiet end of a real mallard's decrescendo
-        8 => (0..5)
-            .map(|n| whistle(t - n as f32 * 0.16, 0.12, 2400., 3100.))
-            .sum(),
-        9 => knock(t - 0.75, 1050.) * 0.8, // deepest peck: atlas frame 6
-        10 => sample_at(DOVE, t),          // an intact short–long–short coo
-        11 => {
-            throat(t, 0.62, 570., 820., 1500., 0.15)
-                + throat(t - 0.78, 0.45, 780., 590., 1400., 0.12)
-        }
-        12 => {
-            throat(t, 0.21, 380., 260., 1100., 0.4)
-                + throat(t - 0.39, 0.26, 430., 270., 1200., 0.35)
-        } // fox yips
-        13 => sample_at(RABBIT[0], t) * 0.68 + sample_at(RABBIT[1], t - 0.75),
-        14 => sample_at(BEAR, t), // irregular breath and low rumble, no oscillator
-        15 => {
-            throat(t, 0.35, 340., 570., 1300., 0.04) + throat(t - 0.3, 0.72, 570., 230., 900., 0.05)
-        } // meow
-        16 => {
-            scratch(t, 0.17, 31) * 0.5
-                + throat(t - 0.25, 0.24, 150., 125., 550., 0.45)
-                + scratch(t - 0.62, 0.24, 32) * 0.5
-        } // hedgehog snuffle
-        17 => (0..6)
-            .map(|n| {
-                sample_at(MOUSE[n % MOUSE.len()], t - (n as f32 * 0.25 + 0.125))
-                    * [1., 0.82, 0.93, 0.88, 0.96, 0.8][n]
-            })
-            .sum(), // tiny claws
-        18 => {
-            throat(t, 0.33, 100., 76., 650., 0.15) * (0.65 + 0.35 * (TAU * 32. * t).sin())
-                + throat(t - 0.52, 0.43, 115., 80., 710., 0.2)
-                    * (0.65 + 0.35 * (TAU * 28. * t).sin())
-        }
-        19 => {
-            knock(t, 720.) * 0.55
-                + knock(t - 1.5, 760.) * 0.5
-                + envelope(t - 0.35, 0.4, 0.08) * air(t, 19, 600.) * 0.14
-        }
-        20 => (0..4)
-            .map(|n| throat(t - n as f32 * 0.21, 0.14, 980., 640., 2300., 0.18))
-            .sum(), // squirrel chatter
-        21 => throat(t, 0.7, 520., 390., 1500., 0.08) * (0.6 + 0.4 * (TAU * 18. * t).sin()), // raccoon trill
-        22 => {
-            scratch(t - 0.5, 0.18, 122) * 0.5
-                + knock(t - 0.75, 520.) * 0.4
-                + throat(t - 0.9, 0.45, 150., 120., 430., 0.08) * 0.35
-        }
-        _ => {
-            whistle(t, 0.25, 1800., 2300.)
-                + whistle(t - 0.38, 0.3, 2100., 1600.)
-                + scratch(t - 0.8, 0.15, 23) * 0.3
-        }
-    }
+    sample_at(VOICES[id % VOICES.len()], t)
 }
 
 fn voice_samples(character: usize, settings: &Settings, count: usize) -> Vec<f32> {
@@ -471,13 +380,19 @@ fn event_samples(event: Event, id: usize, s: &Settings, visual: f32) -> Vec<f32>
     if event.sound == Sound::Voice {
         // The articulated poses repeat every 1.5s. Contact-based performances
         // follow those poses, while vocal phrases happen once per visit.
-        if s.motion && s.mode != Mode::Zen && s.voice == 0 && matches!(id, 9 | 13 | 17 | 19 | 22) {
+        if s.motion
+            && s.mode != Mode::Zen
+            && s.voice == 0
+            && MOVEMENT_FOLEY.contains(&(id % VOICES.len()))
+        {
             let length = VisitTiming::new(visual).turn - PERFORMANCE_START - 0.1;
             let cycle = PERFORMANCE_FRAMES as f32 / PERFORMANCE_FPS;
+            let cycle_samples = (cycle * RATE as f32) as usize;
             return (0..(length * RATE as f32) as usize)
                 .map(|i| {
                     let t = i as f32 / RATE as f32;
-                    creature(id, t % cycle) * ((length - t) / 0.04).min(1.)
+                    creature(id, (i % cycle_samples) as f32 / RATE as f32)
+                        * ((length - t) / 0.04).min(1.)
                 })
                 .collect();
         }
@@ -622,19 +537,10 @@ mod tests {
     use super::*;
     #[test]
     fn natural_samples_are_gentle_and_fit_the_existing_actions() {
-        for (pcm, max_length, max_peak) in [
-            (DUCK, 1.46, 0.37),
-            (DOVE, 1.56, 0.31),
-            (RABBIT[0], 0.24, 0.23),
-            (RABBIT[1], 0.26, 0.21),
-            (BEAR, 1.36, 0.43),
-            (MOUSE[0], 0.12, 0.25),
-            (MOUSE[1], 0.12, 0.25),
-            (MOUSE[2], 0.12, 0.25),
-        ] {
+        for pcm in VOICES {
             assert_eq!(pcm.len() % 2, 0);
             let length = pcm.len() as f32 / (2. * RATE as f32);
-            assert!(length > 0.09 && length < max_length);
+            assert!((1.45..=1.56).contains(&length));
             let samples: Vec<_> = pcm
                 .as_chunks::<2>()
                 .0
@@ -642,15 +548,12 @@ mod tests {
                 .map(|p| i16::from_le_bytes([p[0], p[1]]) as f32 / 32768.)
                 .collect();
             assert!(samples.iter().any(|x| x.abs() > 0.02));
-            assert!(samples.iter().all(|x| x.abs() < max_peak));
+            assert!(samples.iter().all(|x| x.abs() < 0.37));
             assert_eq!(samples[0], 0.);
             assert_eq!(*samples.last().unwrap(), 0.);
             assert_eq!(sample_at(pcm, -0.01), 0.);
             assert_eq!(sample_at(pcm, length + 0.01), 0.);
         }
-        assert_ne!(MOUSE[0], MOUSE[1]);
-        assert_ne!(MOUSE[1], MOUSE[2]);
-        assert_ne!(RABBIT[0], RABBIT[1]);
         // Coco's two grounded atlas poses are 0 and 6. Leave space between
         // contacts instead of running a scrape or an animal cry across the hop.
         assert!(creature(13, 0.06).abs() > 0.0001);
@@ -664,10 +567,51 @@ mod tests {
             let energy: f32 = (0..2400)
                 .map(|i| creature(17, contact + i as f32 / RATE as f32).powi(2))
                 .sum();
-            assert!(energy > 0.1);
+            assert!(energy > 0.01);
             assert_eq!(creature(17, contact - 0.02), 0.);
             assert_eq!(creature(17, contact + 0.12), 0.);
         }
+    }
+    #[test]
+    fn movement_foley_repeats_with_atlas_and_stops_before_the_turn() {
+        use crate::model::*;
+        let s = Settings::default();
+        let visual = visit_duration(duration(&s, 1));
+        for (id, character) in CAST.iter().enumerate() {
+            let samples = event_samples(
+                Event {
+                    at: PERFORMANCE_START,
+                    sound: Sound::Voice,
+                },
+                id,
+                &s,
+                visual,
+            );
+            if MOVEMENT_FOLEY.contains(&id) {
+                let cycle = (RATE as f32 * PERFORMANCE_FRAMES as f32 / PERFORMANCE_FPS) as usize;
+                assert!(
+                    samples[..cycle]
+                        .iter()
+                        .zip(&samples[cycle..cycle * 2])
+                        .all(|(a, b)| a == b),
+                    "{}",
+                    character.name
+                );
+                assert!(
+                    PERFORMANCE_START + samples.len() as f32 / (RATE as f32)
+                        < VisitTiming::new(visual).turn
+                );
+            } else {
+                assert_eq!(samples.len(), (1.6 * RATE as f32) as usize);
+            }
+        }
+        // The recorded wood tap must occur at the visible deepest peck (frame 6).
+        assert_eq!(performance_frame(0.75), 6);
+        let peck: f32 = (0..4800)
+            .map(|i| creature(9, 0.75 + i as f32 / RATE as f32).powi(2))
+            .sum();
+        assert!(peck > 0.01);
+        assert!((0..18000).all(|i| creature(9, i as f32 / RATE as f32) == 0.));
     }
     #[test]
     fn score_follows_visible_contacts_and_counts_only_after_closure() {
@@ -859,7 +803,8 @@ mod tests {
             volume: 100,
             ..Settings::default()
         };
-        for (id, label) in [(7, "dot-solo"), (10, "pearl-solo"), (13, "coco-solo")] {
+        for (id, character) in CAST.iter().enumerate() {
+            let label = character.name.to_lowercase();
             let visual = crate::model::visit_duration(duration(&settings, 1));
             let samples = event_samples(
                 Event {
@@ -870,7 +815,17 @@ mod tests {
                 &settings,
                 visual,
             );
-            std::fs::write(dir.join(format!("{label}.wav")), encode_wav(&samples, 0.65)).unwrap();
+            std::fs::write(
+                dir.join(format!("{label}-solo.wav")),
+                encode_wav(&samples, 0.65),
+            )
+            .unwrap();
+            let mut visit = VisitAudio::new(id, &settings, 1, true);
+            std::fs::write(
+                dir.join(format!("{label}-visit.wav")),
+                visit.take_due(0.).unwrap().wav,
+            )
+            .unwrap();
         }
     }
     #[test]

@@ -1,94 +1,138 @@
-# Three character sound studies
+# Recorded voices and Foley for all 24 friends
 
-Prepared 19 November 2026. These are first listening studies for Dot, Pearl, and
-Coco. The shared Rust mixer uses them in both native frontends. All three retain
-the original speed and pitch of their source recordings.
+Updated 20 November 2026. All individual character greetings now use edited
+recordings or recorded prop Foley in the shared Rust mixer, on Windows and Mac.
+The approved Dot, Pearl and Coco PCM assets are unchanged. Recordings retain
+their original speed and pitch; no oscillator calls, stretched creaks or
+AI-generated character samples remain in the active individual-voice path.
 
-## Research that shaped the edit
+## Research and sound choices
 
-The Academy describes Foley as performance against picture, especially footsteps,
-breath, fabric, and props. For this clock, each material sound should occur where
-the toy touches or moves. Short separate contacts leave space for the character's
-identity and the clock bells. [Academy sound activities guide](https://www.oscars.org/sites/oscars/files/complete_sound_and_music_activities_guide.pdf)
+The Academy describes Foley as performing footsteps, fabric and props against
+picture. Here, contacts follow the animated toy's feet, paws and props.
+[Academy sound activities guide](https://www.oscars.org/sites/oscars/files/complete_sound_and_music_activities_guide.pdf).
 
-Cornell describes a female mallard's quacks as a phrase that diminishes in
-loudness. Dot uses two closing quacks from a real recording. Their nasal, textured
-attack remains, with filtering and short fades to soften the edges.
-[Cornell Mallard sound guide](https://www.allaboutbirds.org/guide/Mallard/sounds)
-and [Audubon Mallard guide](https://www.audubon.org/field-guide/bird/mallard).
+Bird greetings favor song, coos and low hoots. Cornell describes the bluebird's
+short, soft warbles and the owl's deep hoots; the Woodland Trust distinguishes
+robin song from urgent alarm calls. These guided the choice of recordings.
+[Eastern bluebird](https://www.allaboutbirds.org/guide/Eastern_Bluebird/sounds),
+[great horned owl](https://www.allaboutbirds.org/guide/Great_Horned_Owl/sounds),
+[robin song](https://www.woodlandtrust.org.uk/blog/identify-bird-song/).
+Mango uses a white-throated toucan recording; Fern uses a European greenfinch.
+The toy drawings are stylized and do not establish a biological subspecies.
+Sunny and Indigo have feather-movement Foley rather than loud display calls.
 
-Cornell describes the collared-dove's short–long–short coo and distinguishes it
-from the excited or alarmed call. Pearl uses one intact three-part coo.
-[Cornell collared-dove sound guide](https://www.allaboutbirds.org/guide/Eurasian_Collared-Dove/sounds).
+For quiet woodland toys, the sounds represent material movement. Cloth supplies
+soft foot contacts, paper supplies fine scratches and feather/fan movement,
+wood supplies pecks and hoof contacts, and small carrot contacts supply food
+nibbles. Bruno, Clover and Hazel use human-breath Foley for an exhale or sniff;
+these are not wildlife recordings of those species. Clementine uses a real cat
+purr. Moss uses a real frog recording whose source does not identify the species.
 
-The RSPCA describes happy rabbit jumping and explains that thumping, grunting,
-and loud tooth grinding can occur with fear or discomfort. Coco's greeting
-therefore uses two light paw landings. A real rabbit-thump recording was located
-and kept as a research reference, while the final landing texture comes from
-cloth Foley. [RSPCA rabbit behaviour](https://science.rspca.org.uk/en/web/rspca/adviceandwelfare/pets/rabbits/behaviour)
-and [kessir's rabbit-thump recording, CC0](https://freesound.org/people/kessir/sounds/386007/).
+The earlier choices remain: Dot uses closing quacks from a diminishing mallard
+phrase; Pearl keeps the complete short-long-short coo. Coco uses paw landings
+rather than distress or warning sounds.
+[Mallard](https://www.allaboutbirds.org/guide/Mallard/sounds),
+[collared dove](https://www.allaboutbirds.org/guide/Eurasian_Collared-Dove/sounds),
+[RSPCA rabbit behaviour](https://science.rspca.org.uk/en/web/rspca/adviceandwelfare/pets/rabbits/behaviour).
 
 ## Timing and mix
 
-| Friend | Treatment | Placement |
+All offsets below are seconds after the performance starts at visit time 4.3 s,
+once the doors are fully open and the visitor is on the stage.
+
+| Friend | Recorded treatment | Performance timing |
 | --- | --- | --- |
-| Dot | Two edited field-recorded quacks | 0.16 and 0.77 seconds after the performance starts |
-| Pearl | One complete recorded coo | Begins 0.08 seconds into the performance and ends at 1.46 seconds |
-| Coco | Two separate cloth contacts | Atlas frames 0 and 6, every 0.75 seconds during the hopping performance |
+| Pip | One complete natural two-note common cuckoo phrase. | 0.15 s; once |
+| Rosie | A short European robin song phrase, rather than an alarm tic. | 0.12 s; once |
+| Otis | Two rounded great horned owl hoots, with the natural pause shortened. | 0.03, 0.9 s; once |
+| Blue | A quiet Eastern bluebird warble, retaining the recorded pitch. | 0.22 s; once |
+| Sunny | Paper-brush Foley follows the crest folding and lifting; no cockatoo shriek. | 0.25, 0.75 s; repeats every 1.5 s |
+| Pebble | Alternating soft cloth flipper steps. | 0, 0.75 s; repeats every 1.5 s |
+| Mango | A short white-throated toucan phrase, aligned with the beak nod. | 0.48 s; once |
+| Dot | Two quiet mallard quacks, unchanged. | 0.16 and 0.77 s, once |
+| Fern | One small greenfinch twitter, with high-frequency edge softened. | 0.08 s; once |
+| Knock | A recorded light wood tap at the deepest peck, atlas frame 6. | 0.75 s; repeats every 1.5 s |
+| Pearl | One complete collared-dove coo, unchanged. | 0.08 s, once |
+| Indigo | Two broad paper-feather sweeps follow the fan sway. | 0.125, 0.875 s; repeats every 1.5 s |
+| Clover | A tiny sniff and soft tail brush, human breath and cloth Foley. | 0.16, 0.87 s; repeats every 1.5 s |
+| Coco | Two soft cloth landings, unchanged. | frames 0 and 6, repeating |
+| Bruno | One low relaxed exhale and a cloth paw wave. Human breath Foley, not a bear roar. | 0.08, 0.75 s; once |
+| Clementine | A real cat purr, with soft head-tilt-length edges. | 0.07 s; once |
+| Hazel | Two little sniffles, edited from short human-breath takes as Foley. | 0.08, 0.78 s; repeats every 1.5 s |
+| Miso | Six fine paper-friction claw strokes follow the alternating animated paws. | 0.125, 0.375, 0.625, 0.875, 1.125, 1.375 s; repeats every 1.5 s |
+| Moss | A small field-recorded frog croak at the grounded start of the leap. | 0 s; once |
+| Fawn | A light wooden hoof contact when the stepping leg returns, plus a tiny settling contact. | 0, 0.1 s; repeats every 1.5 s |
+| Acorn | Three small nut nibbles from recorded carrot crunches while the acorn is raised. | 0.5, 0.75, 1 s; repeats every 1.5 s |
+| Bandit | Quiet cloth paw rubs follow the side-to-side inspection. | 0.25, 1 s; repeats every 1.5 s |
+| Bamboo | Two soft bamboo-style nibbles from different carrot contacts, near the raised prop. | 0.625, 0.95 s; repeats every 1.5 s |
+| Olive | Two soft cloth-and-paper fish-cradle rubs at the sway extremes. | 0.25, 1 s; repeats every 1.5 s |
 
-The performance starts 4.3 seconds into the visit, once the doors are open and
-the visitor has arrived. Coco's contact sequence repeats with the 1.5-second
-animation cycle and stops before the turn. Reduced motion plays a short
-two-contact greeting. Master volume, quiet hours, silent mode, and Zen mode use
-the existing settings.
+The atlas has twelve frames at eight frames per second. Material performances
+repeat on that 1.5-second cycle; each loop uses the same integer PCM positions
+to avoid drift. The final loop fades only its audio over 40 ms and stops 100 ms
+before the turn starts. Solid characters keep their existing turn, retreat and
+door ordering. Vocal phrases occur once per visit and finish before the turn.
+Reduced motion plays one short greeting. Zen, mute, volume, quiet hours and
+snooze retain their existing behavior.
 
-Only these three character sounds are part of this study. The shared opening
-and closing door effects and bells still use the existing mix, so solo previews
-are useful for assessing the character sound itself.
+New recorded voices are capped at 0.29 peak amplitude; new movement Foley at
+0.24 or lower before master gain. Existing Dot is capped at 0.36. These are
+peak ceilings, not claims of identical perceived loudness. Short edge fades,
+rounded filtering and space between contacts soften the presentation. No pitch
+or time manipulation is used. Alternate cuckoo/whistle voices, clock mechanisms
+and meditation bells retain their existing synthesis and settings.
 
-## Sources and audio licensing
+## Recording credits and licenses
 
-**Dot.** Jonathon Jongsma, *Mallard (Anas platyrhynchos), XC62258*, recorded
-14 September 2010. Adapted by selecting two quacks, spacing, filtering, fades,
-and gain. Original recording and adapted Dot audio use
-[CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0/).
-[Original source](https://xeno-canto.org/62258) and
-[Wikimedia copy](https://commons.wikimedia.org/wiki/File:Anas_platyrhynchos_-_Mallard_-_XC62258.ogg).
+The following credits are also included in both app packages. License terms
+apply to the identified recordings and their audio adaptations; no endorsement
+by any recordist is implied. CC BY-SA adaptations retain the source license.
+CC0 and public-domain material remains available under its stated dedication.
 
-**Pearl.** Jonathon Jongsma, *Eurasian Collared Dove (Streptopelia decaocto),
-XC82758*, recorded 3 July 2011. Adapted by selecting a phrase, filtering,
-fades, and gain. Original recording and adapted Pearl audio use
-[CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0/).
-[Original source](https://xeno-canto.org/82758) and
-[Wikimedia license record](https://commons.wikimedia.org/wiki/File:Streptopelia_decaocto_-_Eurasian_Collared_Dove_-_XC82758.ogg).
+- **Dot:** Jonathon Jongsma, [Mallard XC62258](https://xeno-canto.org/62258), [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0/). Two closing quacks selected, separated, filtered, faded and leveled.
+- **Pearl:** Jonathon Jongsma, [Eurasian Collared Dove XC82758](https://xeno-canto.org/82758), [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0/). One intact coo selected, filtered, faded and leveled.
+- **Coco:** PelicanPolice, [Fabric flaps](https://freesound.org/people/PelicanPolice/sounds/580967/), [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/). Recorded T-shirt contacts selected, filtered, faded, leveled and placed at landing phases.
+- **Pip:** Benoît Van Hecke, [Cuculus canorus - Common Cuckoo XC541195.mp3](https://commons.wikimedia.org/wiki/File:Cuculus_canorus_-_Common_Cuckoo_XC541195.mp3). Original recording and the specified adapted PCM audio: **[CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0)**. Original-speed trim, filtering, edge fades, gain and cue placement; exact edits are in `assets/audio/foley/cast/edits.json`.
+- **Rosie:** Jan Cibulka, [Erithacus rubecula - European Robin XC441752.mp3](https://commons.wikimedia.org/wiki/File:Erithacus_rubecula_-_European_Robin_XC441752.mp3). Original recording and the specified adapted PCM audio: **[CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0)**. Original-speed trim, filtering, edge fades, gain and cue placement; exact edits are in `assets/audio/foley/cast/edits.json`.
+- **Otis:** Jonathon Jongsma, [Bubo virginianus - Great Horned Owl XC428421.mp3](https://commons.wikimedia.org/wiki/File:Bubo_virginianus_-_Great_Horned_Owl_XC428421.mp3). Original recording and the specified adapted PCM audio: **[CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0)**. Original-speed trim, filtering, edge fades, gain and cue placement; exact edits are in `assets/audio/foley/cast/edits.json`.
+- **Blue:** Jonathon Jongsma, [Sialia sialis - Eastern Bluebird XC79976.mp3](https://commons.wikimedia.org/wiki/File:Sialia_sialis_-_Eastern_Bluebird_XC79976.mp3). Original recording and the specified adapted PCM audio: **[CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0)**. Original-speed trim, filtering, edge fades, gain and cue placement; exact edits are in `assets/audio/foley/cast/edits.json`.
+- **Fern:** Jan Cibulka, [Chloris chloris - European Greenfinch XC484483.mp3](https://commons.wikimedia.org/wiki/File:Chloris_chloris_-_European_Greenfinch_XC484483.mp3). Original recording and the specified adapted PCM audio: **[CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0)**. Original-speed trim, filtering, edge fades, gain and cue placement; exact edits are in `assets/audio/foley/cast/edits.json`.
+- **Clementine:** Mysid, [Purring cat.oga](https://commons.wikimedia.org/wiki/File:Purring_cat.oga). Original recording and the specified adapted PCM audio: **Public domain**. Original-speed trim, filtering, edge fades, gain and cue placement; exact edits are in `assets/audio/foley/cast/edits.json`.
+- **Knock, Fawn:** Elandre01, [Freesound - Knocking on wood.wav by Elandre01](https://freesound.org/people/Elandre01/sounds/594389/). Original recording and the specified adapted PCM audio: **[CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/)**. Original-speed trim, filtering, edge fades, gain and cue placement; exact edits are in `assets/audio/foley/cast/edits.json`.
+- **Sunny, Indigo, Miso, Bandit, Olive:** keweldog, [Freesound - rustling paper.wav by keweldog](https://freesound.org/people/keweldog/sounds/181774/). Original recording and the specified adapted PCM audio: **[CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/)**. Original-speed trim, filtering, edge fades, gain and cue placement; exact edits are in `assets/audio/foley/cast/edits.json`.
+- **Acorn, Bamboo:** berzins1, [Freesound - Carrot eating.mp3 by berzins1](https://freesound.org/people/berzins1/sounds/93061/). Original recording and the specified adapted PCM audio: **[CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/)**. Original-speed trim, filtering, edge fades, gain and cue placement; exact edits are in `assets/audio/foley/cast/edits.json`.
+- **Clover, Bruno, Hazel:** Samusasi, [Freesound - Respiración_Suave_s.wav by Samusasi](https://freesound.org/people/Samusasi/sounds/364482/). Original recording and the specified adapted PCM audio: **[CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/)**. Original-speed trim, filtering, edge fades, gain and cue placement; exact edits are in `assets/audio/foley/cast/edits.json`.
+- **Mango:** Niels Krabbe, [Ramphastos tucanus - White-throated Toucan XC251458.mp3](https://commons.wikimedia.org/wiki/File:Ramphastos_tucanus_-_White-throated_Toucan_XC251458.mp3). Original recording and the specified adapted PCM audio: **[CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0)**. Original-speed trim, filtering, edge fades, gain and cue placement; exact edits are in `assets/audio/foley/cast/edits.json`.
+- **Moss:** clif_creates, [Small Frog Croaks](https://freesound.org/people/clif_creates/sounds/802737/). Original recording and the specified adapted PCM audio: **[CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/)**. Original-speed trim, filtering, edge fades, gain and cue placement; exact edits are in `assets/audio/foley/cast/edits.json`.
+- **Pebble, Clover, Bruno, Bandit, Olive:** PelicanPolice, [Fabric flaps](https://freesound.org/people/PelicanPolice/sounds/580967/). Original recording and the specified adapted PCM audio: **[CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/)**. Original-speed trim, filtering, edge fades, gain and cue placement; exact edits are in `assets/audio/foley/cast/edits.json`.
 
-**Coco.** PelicanPolice, *Fabric flaps*, recorded 22 July 2021. The source is
-recorded T-shirt movement. Adapted by selecting two contacts, filtering,
-fades, gain, and synchronization. Original and Coco audio use
-[CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/).
-[Source recording and license](https://freesound.org/people/PelicanPolice/sounds/580967/).
+Original recordings, source URLs, SHA-256 checksums and licenses are in
+`assets/audio/foley/provenance.json` and
+`assets/audio/foley/cast/provenance.json`. The new edit manifest records every
+source interval, filter, fade, placement and gain. Source files are included so
+preparation works offline. Freesound files are credited high-quality MP3 previews.
 
 ## Reproduce and audition
 
-From the repository root, with Rust, uv, and ffmpeg installed:
+From the repository root, with Rust, uv and ffmpeg installed:
 
 ```powershell
 uv run --with numpy --with scipy python tools/prepare_foley_studies.py
+uv run --with numpy --with scipy python tools/prepare_cast_audio.py
+cargo test --locked --release --lib
 cargo test --locked --release --lib export_audition_tracks -- --ignored --nocapture
 ```
 
-The preparation script writes isolated studies and measurements under
-`artifacts/foley-studies`. The Rust exporter writes the actual performance
-stems (`dot-solo.wav`, `pearl-solo.wav`, and `coco-solo.wav`), full visit WAVs,
-and timeline CSVs under `artifacts/audio-qa`. Coco's Rust stem includes the
-repeated contacts used by the running clock.
+Preparation writes measurements and WAVs under `artifacts/cast-audio`. The Rust
+exporter writes all 24 actual performance stems as `<name>-solo.wav`, all 24
+full visits as `<name>-visit.wav`, and additional bell/door reference mixes
+under `artifacts/audio-qa`. Artifacts and loopback captures are not published.
 
-## Verification on Windows
+## Verification
 
-The 17 automated tests passed, including sample boundaries, silence and Zen
-behavior, contact timing, and headroom. All three were previewed through the
-native visitor gallery in the packaged Windows app. Output-only WASAPI captures
-matched the first 12.7 seconds of their reference visit mixes with correlations
-above 0.999998. The captures reported no audio status flags, and the saved
-settings were unchanged. This checks playback and timing. The sound studies
-still need Nick's listening review for character, softness, and preference.
+Automated coverage includes all 24 sample boundaries, headroom, distinct audio,
+silence/Zen behavior, contact repetition without drift, mouse claw phases,
+woodpecker peck placement, stopping before the turn, door order and bell counts.
+Native playback verification is recorded after the packaged Windows check.
+Technical verification cannot replace a listening review for artistic preference.

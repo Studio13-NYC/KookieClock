@@ -1,6 +1,8 @@
 # Recorded character sounds
 
-Prepared on 19 November 2026 for Dot, Pearl, and Coco. The original recordings
+The original Dot, Pearl and Coco studies were prepared on 19 November 2026.
+All 24 friends now use recorded voices or Foley; the remaining 21 are in
+[`cast/`](cast/), with exact edits and source provenance. The original recordings
 and their prepared PCM derivatives are identified below. Preparation is
 reproducible with `tools/prepare_foley_studies.py` and uses original speed and
 pitch. The PCM format is mono, 24 kHz, signed 16-bit little-endian.
